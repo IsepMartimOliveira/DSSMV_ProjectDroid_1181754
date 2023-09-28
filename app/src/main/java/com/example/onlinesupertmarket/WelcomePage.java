@@ -18,7 +18,7 @@ public class WelcomePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Create an Intent to start the new activity
-                Intent intent = new Intent(WelcomePage.this, SecondActivity.class);
+                Intent intent = new Intent(WelcomePage.this, registerPage.class);
                 startActivity(intent);
             }
         });
