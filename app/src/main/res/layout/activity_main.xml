@@ -38,7 +38,6 @@
             android:layout_gravity="center"
             android:layout_marginTop="10dp">
 
-        <!-- First set of ImageView and EditText within a horizontal LinearLayout -->
         <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,7 +60,6 @@
             />
         </LinearLayout>
 
-        <!-- Second set of ImageView and EditText within a horizontal LinearLayout -->
         <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -90,7 +88,6 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp">
 
-        <!-- Button -->
         <Button
                 android:id="@+id/button"
                 android:layout_width="122dp"
@@ -107,7 +104,6 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp">
 
-        <!-- Register TextView -->
         <TextView
                 android:layout_width="63dp"
                 android:layout_height="23dp"
