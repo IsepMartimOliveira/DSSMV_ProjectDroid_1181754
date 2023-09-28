@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/color/hint_text_color.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_empty="true" android:color="#FF0000" /> <!-- Red color when empty -->
+    <item android:color="#000000" /> <!-- Default color -->
+</selector>

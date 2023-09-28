@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background -->
+    <item android:drawable="@android:drawable/edit_text" />
+
+    <!-- Border for error (empty field) -->
+    <item>
+        <shape>
+            <solid android:color="#000000" /> <!-- Existing background color (black) -->
+            <stroke
+                    android:width="2dp"
+                    android:color="#FF0000" /> <!-- Red border for error (empty field) -->
+        </shape>
+    </item>
+</layer-list>

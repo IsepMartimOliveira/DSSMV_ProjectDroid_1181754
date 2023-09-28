@@ -16,7 +16,7 @@
     >
         <TextView android:layout_width="match_parent"
                   android:layout_height="50dp"
-                  android:text="Register an Account"
+                  android:text="Register Account"
                   android:textSize="24sp"
                   android:textStyle="bold"
                   android:gravity="center"
@@ -38,6 +38,7 @@
                 android:layout_gravity="center_horizontal"
                 android:id="@+id/username"
                 android:textSize="12sp"
+
 
         />
         <EditText
@@ -82,6 +83,7 @@
                 android:layout_height="47dp"
                 android:text="Register"
                 android:clickable="true"
+                android:onClick="onRegisterClick"
         />
     </LinearLayout>
     <LinearLayout
