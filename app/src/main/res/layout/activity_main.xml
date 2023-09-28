@@ -108,6 +108,9 @@
                 android:layout_width="63dp"
                 android:layout_height="23dp"
                 android:text="Register"
+                android:id="@+id/registerText"
+                android:gravity="center"
+
         />
     </LinearLayout>
 
