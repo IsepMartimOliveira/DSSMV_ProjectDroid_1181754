@@ -76,6 +76,7 @@
                     android:layout_width="201dp"
                     android:layout_height="36dp"
                     android:id="@+id/password"
+                    android:inputType="textPassword"
                     android:hint="Password"
                     android:textSize="12sp"
             />

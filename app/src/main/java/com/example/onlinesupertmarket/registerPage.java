@@ -47,7 +47,10 @@ public class registerPage extends AppCompatActivity {
 
         registerTextView.setOnClickListener(v -> {
             Intent intent = new Intent(registerPage.this, WelcomePage.class);
+            startActivity(intent);
+
         });
+
       userRegister.setOnClickListener(view -> {
           if (!hasEmptyFields()) {
               makePostRequest();
@@ -110,7 +113,7 @@ public class registerPage extends AppCompatActivity {
             @Override
             public void onFailure(Call call, @NotNull IOException e) {
                 runOnUiThread(() -> {
-                    Toast.makeText(registerPage.this, "POST Request Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(registerPage.this, "Account failed creation", Toast.LENGTH_SHORT).show();
                 });
             }
 
@@ -122,15 +125,14 @@ public class registerPage extends AppCompatActivity {
                         @Override
                         public void run() {
                             User user = Convert.convertFromJson(responseBody, User.class);
-                            saveUserCredentials(user.getUsername(), user.getHash());
-
+                            saveUserCredentials(user.getUsername(), user.getHash(),user.getSpoonacularPassword());
 
                             Toast.makeText(registerPage.this, "Account created with success", Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {
                     final String errorResponse = response.body().string();
-                    runOnUiThread(() -> Toast.makeText(registerPage.this, "POST Request Failed\n" + errorResponse, Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(registerPage.this, "Account failed creation\n" + errorResponse, Toast.LENGTH_SHORT).show());
                 }
             }
         });
@@ -145,12 +147,25 @@ public class registerPage extends AppCompatActivity {
             editText.setBackground(null);
         }
     }
-    private void saveUserCredentials(String username, String hash) {
+    private void saveUserCredentials(String username, String hash,String password) {
         SharedPreferences sharedPreferences = getSharedPreferences("user_data", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("username", username);
         editor.putString("hash", hash);
+        editor.putString("spoonacularPassword",password);
         editor.apply();
     }
+
+   /* private void navigateToWelcomePage(String username, String spoonacularPassword) {
+        Intent intent = new Intent(registerPage.this, WelcomePage.class);
+        intent.putExtra("username", username);
+        intent.putExtra("spoonacularPassword", spoonacularPassword);
+        startActivity(intent);
+    }*/
+
+
+
+
+
 }
 
