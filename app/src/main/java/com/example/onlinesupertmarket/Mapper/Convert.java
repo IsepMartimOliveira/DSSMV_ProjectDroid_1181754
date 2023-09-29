@@ -2,7 +2,7 @@ package com.example.onlinesupertmarket.Mapper;
 
 import com.google.gson.Gson;
 
-public class ConvertDTOtoJSON {
+public class Convert {
 
     public static String convertToJson(Object dtoObject) {
         Gson gson = new Gson();

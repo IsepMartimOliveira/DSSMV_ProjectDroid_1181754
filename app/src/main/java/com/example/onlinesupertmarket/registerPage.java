@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.onlinesupertmarket.DTO.UserDTO;
-import com.example.onlinesupertmarket.Mapper.ConvertDTOtoJSON;
+import com.example.onlinesupertmarket.Mapper.Convert;
 import com.example.onlinesupertmarket.Model.User;
 import com.example.onlinesupertmarket.Network.HttpClient;
 import okhttp3.Call;
@@ -101,7 +101,7 @@ public class registerPage extends AppCompatActivity {
 
         UserDTO userDTO = new UserDTO(usernameEditText, firstNameEditText, lastNameEditText, emailEditText);
 
-        String jsonBody = ConvertDTOtoJSON.convertToJson(userDTO);
+        String jsonBody = Convert.convertToJson(userDTO);
 
         String postUrl = apiUrl+userCreate+api_key;
 
@@ -121,7 +121,7 @@ public class registerPage extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            User user = ConvertDTOtoJSON.convertFromJson(responseBody, User.class);
+                            User user = Convert.convertFromJson(responseBody, User.class);
                             saveUserCredentials(user.getUsername(), user.getHash());
 
 
