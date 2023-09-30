@@ -125,7 +125,8 @@ public class registerPage extends AppCompatActivity {
                         @Override
                         public void run() {
                             User user = Convert.convertFromJson(responseBody, User.class);
-                            saveUserCredentials(user.getUsername(), user.getHash(),user.getSpoonacularPassword());
+                            saveUserCredentials(user.getUsername(), user.getHash());
+                            saveUserForWelcomePage(user.getUsername(),user.getSpoonacularPassword());
 
                             Toast.makeText(registerPage.this, "Account created with success", Toast.LENGTH_SHORT).show();
                         }
@@ -147,11 +148,18 @@ public class registerPage extends AppCompatActivity {
             editText.setBackground(null);
         }
     }
-    private void saveUserCredentials(String username, String hash,String password) {
+    private void saveUserCredentials(String username, String hash) {
         SharedPreferences sharedPreferences = getSharedPreferences("user_data", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("username", username);
         editor.putString("hash", hash);
+        editor.apply();
+    }
+
+    private void saveUserForWelcomePage(String username,String password){
+        SharedPreferences sharedPreferences = getSharedPreferences("user_data_wp", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username", username);
         editor.putString("spoonacularPassword",password);
         editor.apply();
     }

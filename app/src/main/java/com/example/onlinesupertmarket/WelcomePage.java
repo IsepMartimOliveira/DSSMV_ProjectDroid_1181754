@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -25,7 +26,7 @@ public class WelcomePage extends AppCompatActivity {
         button=findViewById(R.id.button);
         userName=findViewById(R.id.username);
         passWord=findViewById(R.id.password);
-        SharedPreferences sharedPreferences = getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("user_data_wp", Context.MODE_PRIVATE);
         String savedUsername = sharedPreferences.getString("username", "");
         String savedSpoonacularPassword = sharedPreferences.getString("spoonacularPassword", "");
 
@@ -35,9 +36,14 @@ public class WelcomePage extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create an Intent to start the new activity
-                Intent intent = new Intent(WelcomePage.this, MenuPage.class);
-                startActivity(intent);
+                String enteredUsername = userName.getText().toString().trim();
+                String enteredPassword = passWord.getText().toString().trim();
+                if (enteredUsername.isEmpty() || enteredPassword.isEmpty()) {
+                    Toast.makeText(WelcomePage.this, "Username and password must not be empty", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(WelcomePage.this, MenuPage.class);
+                    startActivity(intent);
+                }
             }
         });
         registerTextView=findViewById(R.id.registerText);
@@ -54,10 +60,10 @@ public class WelcomePage extends AppCompatActivity {
             passWord.setText(savedSpoonacularPassword);
         }
     }
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
 
-        SharedPreferences sharedPreferences = getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("user_data_wp", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();
