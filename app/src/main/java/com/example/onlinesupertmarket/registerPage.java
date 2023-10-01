@@ -164,16 +164,5 @@ public class registerPage extends AppCompatActivity {
         editor.apply();
     }
 
-   /* private void navigateToWelcomePage(String username, String spoonacularPassword) {
-        Intent intent = new Intent(registerPage.this, WelcomePage.class);
-        intent.putExtra("username", username);
-        intent.putExtra("spoonacularPassword", spoonacularPassword);
-        startActivity(intent);
-    }*/
-
-
-
-
-
 }
 

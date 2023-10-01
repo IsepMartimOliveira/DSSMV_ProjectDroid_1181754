@@ -30,8 +30,6 @@ public class WelcomePage extends AppCompatActivity {
         String savedUsername = sharedPreferences.getString("username", "");
         String savedSpoonacularPassword = sharedPreferences.getString("spoonacularPassword", "");
 
-        String username = getIntent().getStringExtra("username");
-        String spoonacularPassword = getIntent().getStringExtra("spoonacularPassword");
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,7 +46,6 @@ public class WelcomePage extends AppCompatActivity {
         });
         registerTextView=findViewById(R.id.registerText);
         registerTextView.setOnClickListener(v -> {
-            // Create an Intent to navigate to the new activity
             Intent intent = new Intent(WelcomePage.this, registerPage.class); // Replace with your activity names
             startActivity(intent);
         });

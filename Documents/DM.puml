@@ -1,0 +1,31 @@
+@startuml
+hide circle
+
+class User{
+Username
+Hash
+Password
+}
+
+class Recipe{
+Id
+Title
+Image
+Price
+}
+
+class Ingredients{
+name
+Image
+Price
+}
+
+class ShoopingCart{
+
+
+}
+User "1" -- "0..*" Recipe: acesses >
+Recipe"1" --"0..*" Ingredients:has >
+User"1" --"0..*" ShoopingCart   :acesses >
+Ingredients"1..*" -- "1" ShoopingCart: added to >
+@enduml
