@@ -21,6 +21,9 @@
                 android:name=".registerPage"
                 android:exported="false"/>
         <activity
+                android:name=".RecepiePage"
+                android:exported="false"/>
+        <activity
                 android:name=".WelcomePage"
                 android:exported="true">
             <intent-filter>
