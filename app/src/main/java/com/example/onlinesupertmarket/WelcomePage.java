@@ -39,7 +39,7 @@ public class WelcomePage extends AppCompatActivity {
                 if (enteredUsername.isEmpty() || enteredPassword.isEmpty()) {
                     Toast.makeText(WelcomePage.this, "Username and password must not be empty", Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent intent = new Intent(WelcomePage.this, MenuPage.class);
+                    Intent intent = new Intent(WelcomePage.this, MenuPageNavActivity.class);
                     startActivity(intent);
                 }
             }

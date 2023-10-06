@@ -15,6 +15,11 @@
             android:theme="@style/Theme.OnlineSupertmarket"
             tools:targetApi="31">
         <activity
+                android:name=".MenuPageNavActivity"
+                android:exported="false"
+                android:label="@string/title_activity_menu_page_nav"
+                android:theme="@style/Theme.OnlineSupertmarket.NoActionBar"/>
+        <activity
                 android:name=".MenuPage"
                 android:exported="false"/>
         <activity
