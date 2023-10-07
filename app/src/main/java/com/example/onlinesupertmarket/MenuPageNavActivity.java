@@ -1,12 +1,18 @@
 package com.example.onlinesupertmarket;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.hardware.Camera;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import androidx.navigation.NavController;
@@ -21,9 +27,6 @@ public class MenuPageNavActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMenuPageNavBinding binding;
-
-    ImageView shop;
-    ImageView recepie;
 
     TextView textViewusername;
 
@@ -62,19 +65,14 @@ public class MenuPageNavActivity extends AppCompatActivity {
         String savedUsername = sharedPreferences.getString("username", "");
         String greetingUsername = "Hello, " + savedUsername+" !";
         textViewusername.setText(greetingUsername);
+
+
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_page_nav, menu);
-        return true;
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_menu_page_nav);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
-}
+
+
+
+
+
