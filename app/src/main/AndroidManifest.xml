@@ -19,7 +19,11 @@
                 android:name=".MenuPageNavActivity"
                 android:exported="false"
                 android:label="@string/title_activity_menu_page_nav"
-                android:theme="@style/Theme.OnlineSupertmarket.NoActionBar"/>
+                android:theme="@style/Theme.OnlineSupertmarket.NoActionBar"        />
+
+
+
+
         <activity
                 android:name=".registerPage"
                 android:exported="false"/>

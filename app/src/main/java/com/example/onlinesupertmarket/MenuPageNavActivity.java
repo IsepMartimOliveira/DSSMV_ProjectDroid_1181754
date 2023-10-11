@@ -1,18 +1,10 @@
 package com.example.onlinesupertmarket;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.hardware.Camera;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import androidx.navigation.NavController;
@@ -28,6 +20,7 @@ public class MenuPageNavActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMenuPageNavBinding binding;
 
+    private NavController navController;
     TextView textViewusername;
 
     @Override
@@ -44,6 +37,7 @@ public class MenuPageNavActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                //navigateToHome();
             }
         });
         DrawerLayout drawer = binding.drawerLayout;
@@ -54,7 +48,7 @@ public class MenuPageNavActivity extends AppCompatActivity {
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setOpenableLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_menu_page_nav);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_menu_page_nav);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         View headerView = navigationView.getHeaderView(0);
@@ -63,13 +57,20 @@ public class MenuPageNavActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("user_data", Context.MODE_PRIVATE);
         String savedUsername = sharedPreferences.getString("username", "");
-        String greetingUsername = "Hello, " + savedUsername+" !";
+        String greetingUsername = "Hello, " + savedUsername + " !";
         textViewusername.setText(greetingUsername);
 
 
     }
 
+    public void navigateToRecepie(){
+        navController.navigate(R.id.nav_gallery);
     }
+    public void navigateToHome(){
+        navController.navigate(R.id.nav_home);
+    }
+    public  void navigateToShop(){navController.navigate(R.id.nav_slideshow);}
+}
 
 
 

@@ -1,18 +1,18 @@
 package com.example.onlinesupertmarket.ui.home;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import com.example.onlinesupertmarket.MenuPageNavActivity;
 import com.example.onlinesupertmarket.R;
-import com.example.onlinesupertmarket.RecepiePage;
 import com.example.onlinesupertmarket.databinding.FragmentHomeBinding;
+import com.example.onlinesupertmarket.registerPage;
 
 public class HomeFragment extends Fragment {
 
@@ -26,14 +26,19 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         ImageView recepieImageView = root.findViewById(R.id.recepie);
+
         recepieImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), RecepiePage.class);
-                startActivity(intent);
+                if(getActivity() instanceof MenuPageNavActivity) {
+                    ((MenuPageNavActivity) getActivity()).navigateToRecepie();
+                }
+                else{
+                    Toast.makeText(HomeFragment.super.getActivity(), "Cannot Acess", Toast.LENGTH_SHORT).show();
+                }
             }
-        });
 
+        });
 
 
         return root;

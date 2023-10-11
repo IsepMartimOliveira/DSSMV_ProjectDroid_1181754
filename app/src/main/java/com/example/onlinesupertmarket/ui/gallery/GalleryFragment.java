@@ -2,6 +2,7 @@ package com.example.onlinesupertmarket.ui.gallery;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -11,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.onlinesupertmarket.databinding.FragmentGalleryBinding;
 
 public class GalleryFragment extends Fragment {
-
     private FragmentGalleryBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -22,9 +22,10 @@ public class GalleryFragment extends Fragment {
         binding = FragmentGalleryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textGallery;
-        galleryViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        //final TextView textView = binding.textGallery;
+       // galleryViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
+
     }
 
     @Override
