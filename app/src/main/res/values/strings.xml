@@ -49,4 +49,18 @@
     <string name="menu_home">Home</string>
     <string name="menu_recipe">Recipe</string>
     <string name="menu_shop">Shop</string>
+
+    <string-array name="spinner_items">
+        <item>African</item>
+        <item>Asian</item>
+        <item>American</item>
+        <item>American</item>
+        <item>Spanish</item>
+        <item>European</item>
+        <item>Mediterranean</item>
+        <item>Greek</item>
+        <item>Korean</item>
+
+    </string-array>
+
 </resources>

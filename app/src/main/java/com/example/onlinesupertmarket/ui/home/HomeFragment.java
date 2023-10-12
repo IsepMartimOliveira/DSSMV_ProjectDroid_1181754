@@ -34,7 +34,7 @@ public class HomeFragment extends Fragment {
                     ((MenuPageNavActivity) getActivity()).navigateToRecepie();
                 }
                 else{
-                    Toast.makeText(HomeFragment.super.getActivity(), "Cannot Acess", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Cannot Acess", Toast.LENGTH_SHORT).show();
                 }
             }
 
