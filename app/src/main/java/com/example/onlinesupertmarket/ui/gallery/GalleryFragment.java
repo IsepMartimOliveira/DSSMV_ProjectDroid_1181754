@@ -9,9 +9,14 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.example.onlinesupertmarket.Adapter.RecipeItemAdapter;
 import com.example.onlinesupertmarket.DTO.RecipeDTO;
 import com.example.onlinesupertmarket.DTO.RecipeItemDTO;
 import com.example.onlinesupertmarket.Mapper.Convert;
+import com.example.onlinesupertmarket.Mapper.DTOMapper;
+import com.example.onlinesupertmarket.Model.RecipeItem;
 import com.example.onlinesupertmarket.Network.HttpClient;
 import com.example.onlinesupertmarket.R;
 import com.example.onlinesupertmarket.databinding.FragmentGalleryBinding;
@@ -31,6 +36,9 @@ public class GalleryFragment extends Fragment {
     Button button;
     String selectedCuisine="";
 
+    private RecyclerView recyclerView;
+    private RecipeItemAdapter recipeItemAdapter;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         GalleryViewModel galleryViewModel =
@@ -44,6 +52,11 @@ public class GalleryFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         button=root.findViewById(R.id.getCuisine);
+
+        recyclerView = root.findViewById(R.id.recyclerView);
+        recipeItemAdapter = new RecipeItemAdapter(new ArrayList<>());
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        recyclerView.setAdapter(recipeItemAdapter);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,65 +88,52 @@ public class GalleryFragment extends Fragment {
 
 
 
-        public void getRecepie(String urlApi) {
+    public void getRecepie(String urlApi) {
+        HttpClient.getRequest(urlApi, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
 
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        String jsonResponse = response.body().string();
+                        Log.d("API Response", jsonResponse);
 
-            HttpClient.getRequest(urlApi, new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
+                        RecipeDTO recipeDTO = Convert.convertFromJson(jsonResponse, RecipeDTO.class);
 
-                    e.printStackTrace();
-                }
+                        if (recipeDTO.getResults() != null && !recipeDTO.getResults().isEmpty()) {
+                            List<RecipeItemDTO> recipeItemDTOS = recipeDTO.getResults();
 
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        try {
-                            String jsonResponse = response.body().string();
-                            Log.d("API Response", jsonResponse);
+                            // Process the ResultsDTO objects and create Recipe objects
+                            DTOMapper<RecipeItemDTO, RecipeItem> recipeItemMapper = new DTOMapper<>(dto -> new RecipeItem(dto.getTitle(), dto.getImage()));
+                            List<RecipeItem> recipes = recipeItemMapper.mapList(recipeItemDTOS);
 
-                            RecipeDTO recipeDTO = Convert.convertFromJson(jsonResponse, RecipeDTO.class);
-
-                            if (recipeDTO.getResults() != null && !recipeDTO.getResults().isEmpty()) {
-                                List<RecipeItemDTO> recipeItemDTOS = recipeDTO.getResults();
-
-                                // Process the ResultsDTO objects and create Recipe objects
-                                List<RecipeItemDTO> recipes = new ArrayList<>();
-                                for (RecipeItemDTO recipeItemDTO : recipeItemDTOS) {
-                                    String title = recipeItemDTO.getTitle();
-                                    String image = recipeItemDTO.getImage();
-                                    String imageType=recipeItemDTO.getImageType();
-                                    Integer id=recipeItemDTO.getId();
-                                    RecipeItemDTO recipe = new RecipeItemDTO(id,title,image,imageType);
-                                    recipes.add(recipe);
-
-
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(getActivity(), "Title: " + title + "\nImage: " + image, Toast.LENGTH_LONG).show();
-                                        }
-                                    });
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    recipeItemAdapter.updateData(recipes);
                                 }
-
-
-                            } else {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(getActivity(), "No recipes found.", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                            });
+                        } else {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getActivity(), "No recipes found.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
-                    } else {
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+                } else {
+                    // Handle the response when it's not successful
                 }
-
-            });
-        }
+            }
+        });
+    }
 
 
 
