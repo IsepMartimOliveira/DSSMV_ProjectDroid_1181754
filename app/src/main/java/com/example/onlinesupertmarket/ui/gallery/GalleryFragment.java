@@ -59,7 +59,7 @@ public class GalleryFragment extends Fragment {
                 // Get the selected item as a String
                selectedCuisine = parentView.getItemAtPosition(position).toString();
 
-                // Now, you can use the 'selectedCuisine' String as needed
+
             }
 
             @Override
@@ -76,14 +76,12 @@ public class GalleryFragment extends Fragment {
 
 
         public void getRecepie(String urlApi) {
-            // Replace with the actual URL for your recipe API
 
-            // Replace with the actual URL for your recipe API
 
             HttpClient.getRequest(urlApi, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    // Handle the failure, e.g., show an error message
+
                     e.printStackTrace();
                 }
 
@@ -94,7 +92,6 @@ public class GalleryFragment extends Fragment {
                             String jsonResponse = response.body().string();
                             Log.d("API Response", jsonResponse);
 
-                            // Parse the JSON response into RecipeDTO
                             RecipeDTO recipeDTO = Convert.convertFromJson(jsonResponse, RecipeDTO.class);
 
                             if (recipeDTO.getResults() != null && !recipeDTO.getResults().isEmpty()) {
@@ -119,10 +116,8 @@ public class GalleryFragment extends Fragment {
                                     });
                                 }
 
-                                // Now, you have a list of Recipe objects
-                                // You can update the UI or do further processing with the recipes
+
                             } else {
-                                // Handle the case when "results" array is empty (no recipes)
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -134,7 +129,6 @@ public class GalleryFragment extends Fragment {
                             e.printStackTrace();
                         }
                     } else {
-                        // Handle the response error, e.g., show an error message
                     }
                 }
 
