@@ -15,15 +15,22 @@ import java.util.List;
 public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemAdapter.MyViewHolder> {
     private List<RecipeItem> itemList;
 
-    public RecipeItemAdapter(List<RecipeItem> itemList) {
-        this.itemList = itemList;
-    }
+    private OnQuestionMarkClickListener questionMarkClickListener;
 
+    public RecipeItemAdapter(List<RecipeItem> itemList, OnQuestionMarkClickListener questionMarkClickListener) {
+        this.itemList = itemList;
+        this.questionMarkClickListener = questionMarkClickListener;
+    }
+    public interface OnQuestionMarkClickListener {
+        void onQuestionMarkClick(String title);
+    }
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
         public TextView priceTextView;
         public TextView healthScoreTextView;
         public ImageView recipeImageView;
+
+        public  ImageView questionMark;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -31,6 +38,8 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemAdapter.My
             priceTextView = itemView.findViewById(R.id.price);
             healthScoreTextView = itemView.findViewById(R.id.healthScore);
             recipeImageView = itemView.findViewById(R.id.recipeImage);
+            questionMark=itemView.findViewById(R.id.questionMark);
+
         }
     }
 
@@ -48,6 +57,14 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemAdapter.My
         Picasso.get()
                 .load(currentItem.getImage())
                 .into(holder.recipeImageView);
+        holder.questionMark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (questionMarkClickListener != null) {
+                    questionMarkClickListener.onQuestionMarkClick(currentItem.getTitle());
+                }
+            }
+        });
     }
 
     @Override

@@ -7,6 +7,9 @@ public class Utils {
     public static String recipe="recipes/complexSearch";
     public static String cuisine="&cuisine=";
 
+    //https://api.spoonacular.com/recipes/queries/analyze?apiKey=8731e20fa447459cba57412c132ca440&q=Broccolini Quinoa Pilaf
+     public static String searchIngredient="recipes/queries/analyze";
+
 
 
 }
