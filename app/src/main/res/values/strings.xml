@@ -51,16 +51,38 @@
     <string name="menu_shop">Shop</string>
 
     <string-array name="spinner_items">
+        <item>None</item>
         <item>African</item>
         <item>Asian</item>
         <item>American</item>
-        <item>American</item>
-        <item>Spanish</item>
+        <item>British</item>
+        <item>Chinese</item>
         <item>European</item>
-        <item>Mediterranean</item>
         <item>Greek</item>
+        <item>Italian</item>
+        <item>Japanese</item>
         <item>Korean</item>
-
+        <item>Mediterranean</item>
+        <item>Spanish</item>
     </string-array>
-
+    <string-array name="intolerence">
+        <item>None</item>
+        <item>Dairy</item>
+        <item>Egg</item>
+        <item>Gluten </item>
+        <item>Grain</item>
+        <item>Peanut</item>
+        <item>Seafood</item>
+        <item>Shellfish</item>
+        <item>Soy</item>
+        <item>Tree Nut</item>
+        <item>Wheat</item>
+    </string-array>
+    <string-array name="type">
+        <item>None</item>
+        <item>main course</item>
+        <item>side dish</item>
+        <item>dessert </item>
+        <item>appetizer</item>
+    </string-array>
 </resources>

@@ -1,0 +1,55 @@
+<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="121dp"
+        android:orientation="horizontal"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+            android:layout_width="170dp"
+            android:id="@+id/recipeImage"
+            android:layout_height="match_parent"></ImageView>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:id="@+id/name"
+                    android:text="Name:"
+                    android:gravity="center_vertical"
+            />
+
+
+        </LinearLayout>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:id="@+id/price"
+                android:text="Price"
+        />  <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/healthScore"
+            android:text="HealthScore"
+    />
+
+
+
+</LinearLayout>
+
+
+
+</LinearLayout>
+
+
+
+

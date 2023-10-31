@@ -1,5 +1,6 @@
 package com.example.onlinesupertmarket.ui.gallery;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,10 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.onlinesupertmarket.Adapter.IngredientItemAdapter;
 import com.example.onlinesupertmarket.Adapter.RecipeItemAdapter;
 import com.example.onlinesupertmarket.DTO.IngredientDTO;
 import com.example.onlinesupertmarket.DTO.IngredientsDTO;
@@ -35,13 +38,25 @@ import java.util.List;
 import static com.example.onlinesupertmarket.Network.Utils.*;
 
 public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQuestionMarkClickListener {
+    private String selectedRecipeTitle;
+
     private FragmentGalleryBinding binding;
     Spinner spinner;
+
+    Spinner spinner_intollerances;
+    Spinner spinner_type;
     Button button;
     String selectedCuisine="";
+    String selectedIntollerance="";
+    String selectedType="";
 
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView,recyclerView2;
     private RecipeItemAdapter recipeItemAdapter;
+
+    private  IngredientItemAdapter  ingredientAdapter;
+    private LinearLayout moreOptionsLayout;
+
+    private  ImageView hideenLinearLayout;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -55,18 +70,78 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(), R.array.spinner_items, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        button=root.findViewById(R.id.getCuisine);
+        spinner.setSelection(0);
 
+        spinner_intollerances=root.findViewById(R.id.spinnerIntolerances);
+        ArrayAdapter<CharSequence> adapter_intolerances = ArrayAdapter.createFromResource(requireContext(), R.array.intolerence, android.R.layout.simple_spinner_item);
+        adapter_intolerances.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_intollerances.setAdapter(adapter_intolerances);
+        spinner_intollerances.setSelection(0);
+
+        spinner_type=root.findViewById(R.id.spinnerType);
+        ArrayAdapter<CharSequence> adapter_type = ArrayAdapter.createFromResource(requireContext(), R.array.type, android.R.layout.simple_spinner_item);
+        adapter_type.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_type.setAdapter(adapter_type);
+        spinner_type.setSelection(0);
+
+        button=root.findViewById(R.id.getCuisine);
+        hideenLinearLayout=root.findViewById(R.id.showOptionsButton);
         recyclerView = root.findViewById(R.id.recyclerView);
+        moreOptionsLayout = root.findViewById(R.id.moreOptionsLayout);
         recipeItemAdapter = new RecipeItemAdapter(new ArrayList<>(),this);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(recipeItemAdapter);
+        hideenLinearLayout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                onShowOptionsClick(view);
+
+            }
+        });
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url = apiUrl+recipe+api_key+cuisine+selectedCuisine;
+
+                String url = apiUrl+recipe+api_key;
+                if(!selectedCuisine.equals("None")&& !selectedCuisine.isEmpty()){
+                    url +="&cuisine="+selectedCuisine;
+                }
+                if (!selectedIntollerance.isEmpty() && !selectedIntollerance.equals("None")) {
+                    url += "&intolerances=" + selectedIntollerance;
+                }
+
+
+                if (!selectedType.isEmpty() && !selectedType.equals("None")) {
+                    url += "&type=" + selectedType;
+                }
+
                 getRecepie(url);
 
+
+            }
+        });
+        spinner_intollerances.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                 selectedIntollerance=adapterView.getItemAtPosition(i).toString();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        spinner_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                 selectedType=adapterView.getItemAtPosition(i).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
@@ -153,6 +228,7 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
 
     @Override
     public void onQuestionMarkClick(String title) {
+         selectedRecipeTitle = title;
         String url = apiUrl + searchIngredient + api_key +"&q=" +title;
         getIngridients(url);
     }
@@ -186,11 +262,7 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    for (Ingredient ingredient : ingredients) {
-                                        String ingredientName = ingredient.getName();
-                                        Log.d("Ingredient Name", ingredientName);
-                                        Toast.makeText(getActivity(), "IG:"+ingredientName, Toast.LENGTH_SHORT).show();
-                                    }
+                                    showIngredientsAlertDialog(ingredients);
                                 }
                             });
                         } else {
@@ -210,4 +282,42 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
             }
         });
     }
+
+    private void showIngredientsAlertDialog(List<Ingredient> ingredients) {
+        View alertDialogView = getLayoutInflater().inflate(R.layout.alert_dialog_ingridients, null);
+        recyclerView2 = alertDialogView.findViewById(R.id.recyclerView2);
+
+
+        ingredientAdapter=new IngredientItemAdapter(new ArrayList<>());
+        recyclerView2.setLayoutManager(new LinearLayoutManager(requireContext()));
+        recyclerView2.setAdapter(ingredientAdapter);
+
+        ingredientAdapter.updateData(ingredients);
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setView(alertDialogView);
+        builder.setTitle("Ingredients for " + selectedRecipeTitle);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+
+        // Show the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void onShowOptionsClick(View view) {
+
+        if (moreOptionsLayout.getVisibility() == View.VISIBLE) {
+            moreOptionsLayout.setVisibility(View.GONE);
+        } else {
+            moreOptionsLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+
 }

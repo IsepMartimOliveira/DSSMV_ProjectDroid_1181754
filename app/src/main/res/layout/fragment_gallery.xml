@@ -31,11 +31,73 @@
                     android:layout_weight="1"
                     android:layout_marginStart="8dp" />
         </LinearLayout>
+    <ImageView
+            android:id="@+id/showOptionsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_add_24"
+            android:text="Show More Options"
+            android:layout_gravity="center"
+            android:onClick="onShowOptionsClick" />
 
+    <LinearLayout
+            android:id="@+id/moreOptionsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:id="@+id/textIntolerances"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAlignment="center"
+                    android:textSize="17sp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Intolerances:" />
+
+            <Spinner
+                    android:layout_width="0dp"
+                    android:id="@+id/spinnerIntolerances"
+                    android:layout_marginTop="18dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:id="@+id/textType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAlignment="center"
+                    android:textSize="17sp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Type:" />
+
+            <Spinner
+                    android:layout_width="0dp"
+                    android:id="@+id/spinnerType"
+                    android:layout_marginTop="18dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp" />
+        </LinearLayout>
+    </LinearLayout>
         <Button
                 android:id="@+id/getCuisine"
                 android:layout_width="122dp"
-                android:layout_height="47dp"
+                android:layout_height="38dp"
                 android:text="LET´S GO"
                 android:clickable="true"
                 android:onClick="onRegisterClick"
@@ -53,7 +115,11 @@
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
