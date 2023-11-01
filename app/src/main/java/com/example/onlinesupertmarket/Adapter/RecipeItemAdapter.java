@@ -22,7 +22,7 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemAdapter.My
         this.questionMarkClickListener = questionMarkClickListener;
     }
     public interface OnQuestionMarkClickListener {
-        void onQuestionMarkClick(String title);
+        void onQuestionMarkClick(Integer id,String title);
     }
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
@@ -61,7 +61,7 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemAdapter.My
             @Override
             public void onClick(View view) {
                 if (questionMarkClickListener != null) {
-                    questionMarkClickListener.onQuestionMarkClick(currentItem.getTitle());
+                    questionMarkClickListener.onQuestionMarkClick(currentItem.getId(),currentItem.getTitle());
                 }
             }
         });

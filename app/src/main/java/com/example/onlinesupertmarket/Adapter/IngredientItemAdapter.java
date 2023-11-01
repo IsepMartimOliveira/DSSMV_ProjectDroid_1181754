@@ -5,19 +5,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.onlinesupertmarket.Model.Ingredient;
-import com.example.onlinesupertmarket.Model.RecipeItem;
+import com.example.onlinesupertmarket.Model.ExtendedIngridients;
 import com.example.onlinesupertmarket.R;
 import com.squareup.picasso.Picasso;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class IngredientItemAdapter extends RecyclerView.Adapter<IngredientItemAdapter.MyViewHolder>  {
-    private List<Ingredient> ingredientList;
-    public IngredientItemAdapter(List<Ingredient> ingredientList){
+    private List<ExtendedIngridients> ingredientList;
+    public IngredientItemAdapter(List<ExtendedIngridients> ingredientList){
         this.ingredientList=ingredientList;
 
     }
@@ -28,7 +25,7 @@ public class IngredientItemAdapter extends RecyclerView.Adapter<IngredientItemAd
     }
     @Override
     public void onBindViewHolder(IngredientItemAdapter.MyViewHolder holder, int position) {
-        Ingredient currentItem = ingredientList.get(position);
+        ExtendedIngridients currentItem = ingredientList.get(position);
 
 
         holder.nameTextView.setText(currentItem.getName());
@@ -61,7 +58,7 @@ public class IngredientItemAdapter extends RecyclerView.Adapter<IngredientItemAd
 
         }
     }
-    public void updateData(List<Ingredient> newItems) {
+    public void updateData(List<ExtendedIngridients> newItems) {
         ingredientList.clear();
         ingredientList.addAll(newItems);
         notifyDataSetChanged();

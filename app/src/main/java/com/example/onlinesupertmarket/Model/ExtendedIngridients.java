@@ -1,13 +1,12 @@
 package com.example.onlinesupertmarket.Model;
 
-public class Ingredient {
+public class ExtendedIngridients {
+
     private String name;
-    private  boolean include;
     private  String image;
 
-    public Ingredient(String name, boolean include, String image) {
+    public ExtendedIngridients(String name, String image) {
         this.name = name;
-        this.include = include;
         this.image = image;
     }
 
@@ -17,14 +16,6 @@ public class Ingredient {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public boolean isInclude() {
-        return include;
-    }
-
-    public void setInclude(boolean include) {
-        this.include = include;
     }
 
     public String getImage() {

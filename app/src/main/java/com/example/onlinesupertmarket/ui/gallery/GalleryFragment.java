@@ -15,13 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.onlinesupertmarket.Adapter.IngredientItemAdapter;
 import com.example.onlinesupertmarket.Adapter.RecipeItemAdapter;
-import com.example.onlinesupertmarket.DTO.IngredientDTO;
-import com.example.onlinesupertmarket.DTO.IngredientsDTO;
-import com.example.onlinesupertmarket.DTO.RecipeDTO;
-import com.example.onlinesupertmarket.DTO.RecipeItemDTO;
+import com.example.onlinesupertmarket.DTO.*;
 import com.example.onlinesupertmarket.Mapper.Convert;
 import com.example.onlinesupertmarket.Mapper.DTOMapper;
-import com.example.onlinesupertmarket.Model.Ingredient;
+import com.example.onlinesupertmarket.Model.ExtendedIngridients;
 import com.example.onlinesupertmarket.Model.RecipeItem;
 import com.example.onlinesupertmarket.Network.HttpClient;
 import com.example.onlinesupertmarket.R;
@@ -186,10 +183,14 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
                         if (recipeDTO.getResults() != null && !recipeDTO.getResults().isEmpty()) {
                             List<RecipeItemDTO> recipeItemDTOS = recipeDTO.getResults();
 
-                            // Process the ResultsDTO objects and create Recipe objects
-                            DTOMapper<RecipeItemDTO, RecipeItem> recipeItemMapper = new DTOMapper<>(dto -> new RecipeItem(dto.getTitle(), dto.getImage()));
+                            DTOMapper<RecipeItemDTO, RecipeItem> recipeItemMapper = new DTOMapper<>(dto -> {
+                                RecipeItem recipeItem = new RecipeItem(dto.getId(), dto.getTitle(), dto.getImage());
+                                recipeItem.setId(dto.getId());
+                                recipeItem.setTitle(dto.getTitle());
+                                recipeItem.setImage(dto.getImage());
+                                return recipeItem;
+                            });
                             List<RecipeItem> recipes = recipeItemMapper.mapList(recipeItemDTOS);
-
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -227,9 +228,9 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
     }
 
     @Override
-    public void onQuestionMarkClick(String title) {
-         selectedRecipeTitle = title;
-        String url = apiUrl + searchIngredient + api_key +"&q=" +title;
+    public void onQuestionMarkClick(Integer id,String title) {
+        selectedRecipeTitle = title;
+        String url = apiUrl +recipeURL+id+information + api_key +includeNutrition;
         getIngridients(url);
     }
 
@@ -247,14 +248,13 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
                         String jsonResponse = response.body().string();
                         Log.d("API Response", jsonResponse);
 
-                        IngredientsDTO ingredientsDTO = Convert.convertFromJson(jsonResponse, IngredientsDTO.class);
+                        RecepieInformationDTO recepieInformationDTO = Convert.convertFromJson(jsonResponse, RecepieInformationDTO.class);
 
-                        if (ingredientsDTO != null && ingredientsDTO.getIngredientsListDTOS() != null && !ingredientsDTO.getIngredientsListDTOS().isEmpty()) {
-                            List<IngredientDTO> ingredientDTOs = ingredientsDTO.getIngredientsListDTOS();
+                        if (recepieInformationDTO != null && recepieInformationDTO.getExtendedIngredients() != null && !recepieInformationDTO.getExtendedIngredients().isEmpty()) {
+                            List<ExtendedIngridientsDTO> extendedIngridientsDTOS = recepieInformationDTO.getExtendedIngredients();
 
-                            // Process the IngredientDTO objects and create Ingredient objects
-                            DTOMapper<IngredientDTO, Ingredient> ingredientMapper = new DTOMapper<>(dto -> new Ingredient(dto.getName(), dto.isInclude(), dto.getImage()));
-                            List<Ingredient> ingredients = ingredientMapper.mapList(ingredientDTOs);
+                            DTOMapper<ExtendedIngridientsDTO, ExtendedIngridients> ingredientMapper = new DTOMapper<>(dto -> new ExtendedIngridients(dto.getName(),dto.getImage()));
+                            List<ExtendedIngridients> ingredients = ingredientMapper.mapList(extendedIngridientsDTOS);
                             Log.d("Ingredients List Size", String.valueOf(ingredients.size()));
 
 
@@ -283,7 +283,7 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
         });
     }
 
-    private void showIngredientsAlertDialog(List<Ingredient> ingredients) {
+    private void showIngredientsAlertDialog(List<ExtendedIngridients> ingredients) {
         View alertDialogView = getLayoutInflater().inflate(R.layout.alert_dialog_ingridients, null);
         recyclerView2 = alertDialogView.findViewById(R.id.recyclerView2);
 
