@@ -30,17 +30,7 @@
 
         </LinearLayout>
 
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:id="@+id/price"
-                android:text="Price"
-        />  <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/healthScore"
-            android:text="HealthScore"
-    />
+
 
 
 
