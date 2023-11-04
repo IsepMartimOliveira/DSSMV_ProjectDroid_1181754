@@ -42,8 +42,7 @@ public class IngredientItemAdapter extends RecyclerView.Adapter<IngredientItemAd
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
-        public TextView priceTextView;
-        public TextView healthScoreTextView;
+
         public ImageView recipeImageView;
 
 
@@ -51,8 +50,6 @@ public class IngredientItemAdapter extends RecyclerView.Adapter<IngredientItemAd
         public MyViewHolder(View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.name);
-            priceTextView = itemView.findViewById(R.id.price);
-            healthScoreTextView = itemView.findViewById(R.id.healthScore);
             recipeImageView = itemView.findViewById(R.id.recipeImage);
 
 
@@ -63,4 +60,9 @@ public class IngredientItemAdapter extends RecyclerView.Adapter<IngredientItemAd
         ingredientList.addAll(newItems);
         notifyDataSetChanged();
     }
+
+    public List<ExtendedIngridients> getIngredientList() {
+        return ingredientList;
+    }
+
 }

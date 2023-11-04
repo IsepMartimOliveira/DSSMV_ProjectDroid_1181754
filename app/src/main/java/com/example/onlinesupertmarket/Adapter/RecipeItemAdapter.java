@@ -17,29 +17,36 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemAdapter.My
 
     private OnQuestionMarkClickListener questionMarkClickListener;
 
-    public RecipeItemAdapter(List<RecipeItem> itemList, OnQuestionMarkClickListener questionMarkClickListener) {
+    private OnAddToBasketClickListener addToBasketClickListener;
+
+    public RecipeItemAdapter(List<RecipeItem> itemList, OnQuestionMarkClickListener questionMarkClickListener,OnAddToBasketClickListener addToBasketClickListener) {
         this.itemList = itemList;
         this.questionMarkClickListener = questionMarkClickListener;
+        this.addToBasketClickListener=addToBasketClickListener;
     }
     public interface OnQuestionMarkClickListener {
         void onQuestionMarkClick(Integer id,String title);
+
+    }
+
+    public interface OnAddToBasketClickListener {
+        void onAddToBasketClick(RecipeItem item);
     }
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
-        public TextView priceTextView;
-        public TextView healthScoreTextView;
+
         public ImageView recipeImageView;
 
         public  ImageView questionMark;
 
+        public ImageView addToBasket;
+
         public MyViewHolder(View itemView) {
             super(itemView);
-            nameTextView = itemView.findViewById(R.id.name);
-            priceTextView = itemView.findViewById(R.id.price);
-            healthScoreTextView = itemView.findViewById(R.id.healthScore);
+            nameTextView = itemView.findViewById(R.id.name);;
             recipeImageView = itemView.findViewById(R.id.recipeImage);
             questionMark=itemView.findViewById(R.id.questionMark);
-
+            addToBasket=itemView.findViewById(R.id.addToBasket);
         }
     }
 
@@ -62,6 +69,14 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecipeItemAdapter.My
             public void onClick(View view) {
                 if (questionMarkClickListener != null) {
                     questionMarkClickListener.onQuestionMarkClick(currentItem.getId(),currentItem.getTitle());
+                }
+            }
+        });
+        holder.addToBasket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (addToBasketClickListener != null) {
+                addToBasketClickListener.onAddToBasketClick(currentItem);
                 }
             }
         });
