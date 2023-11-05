@@ -39,7 +39,7 @@ import java.util.List;
 
 import static com.example.onlinesupertmarket.Network.Utils.*;
 
-public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQuestionMarkClickListener,RecipeItemAdapter.OnAddToBasketClickListener {
+public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQuestionMarkClickListener {
     private String username;
     private String hash;
     private String selectedRecipeTitle;
@@ -61,6 +61,9 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
     private LinearLayout moreOptionsLayout;
 
     private  ImageView hideenLinearLayout;
+    private int successfulAdditions = 0;
+
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -94,7 +97,7 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
         hideenLinearLayout=root.findViewById(R.id.showOptionsButton);
         recyclerView = root.findViewById(R.id.recyclerView);
         moreOptionsLayout = root.findViewById(R.id.moreOptionsLayout);
-        recipeItemAdapter = new RecipeItemAdapter(new ArrayList<>(),this,  this);
+        recipeItemAdapter = new RecipeItemAdapter(new ArrayList<>(),this);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(recipeItemAdapter);
@@ -243,26 +246,14 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
         getIngridients(url);
     }
 
-    @Override
-    public void onAddToBasketClick(RecipeItem item) {
-        List<ExtendedIngridients> ingredients = ingredientAdapter.getIngredientList();
-
-        if (ingredients != null && !ingredients.isEmpty()) {
-            for (ExtendedIngridients ingredient : ingredients) {
-                String ingredientName = ingredient.getName();
-
-                sendIngredientToBasket(ingredientName);
-            }
-        }
-    }
 
 
 
-    private void sendIngredientToBasket(String ingredientName) {
+    private void sendIngredientToBasket(String ingredientName,final int totalIngredients) {
         String shoppingUrl=apiUrl+mealPlaner+username+shoopingList+api_key+hashURL+hash;
         ShoppingCartItem shoppingCartItem = new ShoppingCartItem(ingredientName);
-
         String ingredientJson = Convert.convertToJson(shoppingCartItem);
+        successfulAdditions++;
         HttpClient.postRequest(shoppingUrl, ingredientJson, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -271,20 +262,13 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-
                 final String responseBody = response.body().string();
                 if (response.isSuccessful()) {
-                    /*ShoopingCartDTO shoopingCartDTO= Convert.convertFromJson(responseBody, ShoopingCartDTO.class);
-                    DTOMapper<ShoopingCartDTO, ShoopingCart>dtoShoopingCartDTOMapper=new DTOMapper<>(dto -> {
-                        ShoopingCart shoopingCart = new ShoopingCart(dto.getName(), dto.getCost());
-                        shoopingCart.setCost(dto.getCost());
-                        shoopingCart.setName(dto.getName());
-                        return shoopingCart;
-                    });*/
-                    showSuccessAlertDialog();
-                } else {
 
-                    showErrorAlertDialog();
+                    if (successfulAdditions == totalIngredients) {
+                        showSuccessAlertDialog();
+                        successfulAdditions=0;
+                    }
                 }
 
             }
@@ -355,11 +339,26 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setView(alertDialogView);
         builder.setTitle("Ingredients for " + selectedRecipeTitle);
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
+        builder.setNegativeButton("Cancell", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
             }
+        });
+        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                List<ExtendedIngridients> ingredients = ingredientAdapter.getIngredientList();
+
+                if (ingredients != null && !ingredients.isEmpty()) {
+
+                    for (ExtendedIngridients ingredient : ingredients) {
+                        String ingredientName = ingredient.getName();
+
+                        sendIngredientToBasket(ingredientName,ingredients.size());
+                    }
+                }
+            }
+
         });
 
         // Show the AlertDialog
