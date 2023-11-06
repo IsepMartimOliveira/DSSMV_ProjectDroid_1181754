@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -19,6 +20,7 @@ import com.example.onlinesupertmarket.Adapter.ShoopingItemAdapter;
 import com.example.onlinesupertmarket.DTO.*;
 import com.example.onlinesupertmarket.Mapper.Convert;
 import com.example.onlinesupertmarket.Mapper.DTOMapper;
+import com.example.onlinesupertmarket.MenuPageNavActivity;
 import com.example.onlinesupertmarket.Model.CartItem;
 import com.example.onlinesupertmarket.Network.HttpClient;
 import com.example.onlinesupertmarket.R;
@@ -39,8 +41,10 @@ public class SlideshowFragment extends Fragment {
     private ShoopingItemAdapter shoopingItemAdapter;
     private RecyclerView recyclerView;
     private FragmentSlideshowBinding binding;
+    private TextView displayTotal;
 
     private Button checkOut,continueShopping;
+    private double totalCost = 0.0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -52,14 +56,30 @@ public class SlideshowFragment extends Fragment {
         username = sharedPreferences.getString("username", "");
         hash = sharedPreferences.getString("hash", "");
         View root = binding.getRoot();
+
+        displayTotal=root.findViewById(R.id.totalCost);
+
         checkOut=root.findViewById(R.id.checkOut);
+        continueShopping=root.findViewById(R.id.continueShopping);
+
         recyclerView=root.findViewById(R.id.rycicleViewShopping);
         shoopingItemAdapter=new ShoopingItemAdapter(new ArrayList<>());
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext())); // Add this line
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(shoopingItemAdapter);
         String shoopingListURL=apiUrl+mealPlaner+username+shoopingList2+api_key+hashURL+hash;
         getShoopingCart(shoopingListURL);
 
+        continueShopping.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getActivity() instanceof MenuPageNavActivity) {
+                    ((MenuPageNavActivity) getActivity()).navigateToRecepie();
+                }
+                else{
+                    Toast.makeText(requireContext(), "Cannot Acess", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         checkOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,12 +122,20 @@ public void getShoopingCart(String url){
                                 }
                         );
                         List<CartItem> cartItems = shoppingInfoToCartItemDTOMapper.mapList(shoppingInfoDTOs);
+                        totalCost = 0.0;
+                        for (CartItem cartItem : cartItems) {
+                            totalCost += cartItem.getCost();
+                        }
 
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 shoopingItemAdapter.updateData(cartItems);
+                                displayTotal.setText("Total Price: " + String.format("%.2f", totalCost)+" €");
+
                             }
+
+
                         });
                     } else {
                         getActivity().runOnUiThread(new Runnable() {
