@@ -44,6 +44,7 @@ public class SlideshowFragment extends Fragment {
     private TextView displayTotal;
 
     private Button checkOut,continueShopping;
+
     private double totalCost = 0.0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -131,7 +132,12 @@ public void getShoopingCart(String url){
                             @Override
                             public void run() {
                                 shoopingItemAdapter.updateData(cartItems);
-                                displayTotal.setText("Total Price: " + String.format("%.2f", totalCost)+" €");
+                                if (!cartItems.isEmpty()) {
+                                    displayTotal.setVisibility(View.VISIBLE);
+                                    displayTotal.setText("Total Price: " + String.format("%.2f", totalCost) + " €");
+                                } else {
+                                    displayTotal.setVisibility(View.GONE);
+                                }
 
                             }
 
@@ -160,5 +166,7 @@ public void getShoopingCart(String url){
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+
     }
+
 }

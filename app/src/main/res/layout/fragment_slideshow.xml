@@ -40,7 +40,8 @@
                 android:textAlignment="center"
                 android:id="@+id/totalCost"
                 android:layout_marginStart="150dp"
-                android:textSize="20sp">
+                android:textSize="20sp"
+                android:visibility="gone">
         </TextView>
     ></LinearLayout>
 

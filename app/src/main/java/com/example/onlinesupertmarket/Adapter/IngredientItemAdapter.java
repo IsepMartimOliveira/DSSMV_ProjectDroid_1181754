@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.onlinesupertmarket.Model.ExtendedIngridients;
+import com.example.onlinesupertmarket.Network.Utils;
 import com.example.onlinesupertmarket.R;
 import com.squareup.picasso.Picasso;
 
@@ -27,8 +28,9 @@ public class IngredientItemAdapter extends RecyclerView.Adapter<IngredientItemAd
     public void onBindViewHolder(IngredientItemAdapter.MyViewHolder holder, int position) {
         ExtendedIngridients currentItem = ingredientList.get(position);
 
+        String name = Utils.capitalizeFirstLetter(currentItem.getName());
 
-        holder.nameTextView.setText(currentItem.getName());
+        holder.nameTextView.setText(name);
 
         Picasso.get()
                 .load("https://spoonacular.com/cdn/ingredients_100x100/"+currentItem.getImage())

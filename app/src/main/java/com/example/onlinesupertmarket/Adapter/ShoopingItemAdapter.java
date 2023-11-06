@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.onlinesupertmarket.Model.CartItem;
 import com.example.onlinesupertmarket.Model.RecipeItem;
+import com.example.onlinesupertmarket.Network.Utils;
 import com.example.onlinesupertmarket.R;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,8 +35,9 @@ public class ShoopingItemAdapter extends RecyclerView.Adapter<ShoopingItemAdapte
     @Override
     public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, int position) {
         CartItem currentItem = cartItems.get(position);
-        holder.name.setText(currentItem.getName());
-        holder.cost.setText(currentItem.getCost().toString());
+        String name = Utils.capitalizeFirstLetter(currentItem.getName());
+        holder.name.setText("Name: " + name);
+        holder.cost.setText("Price: " + currentItem.getCost().toString()+" €");
 
 
 
