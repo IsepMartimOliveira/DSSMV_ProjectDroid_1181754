@@ -13,12 +13,13 @@ public class Utils {
     public static  String mealPlaner="mealplanner/";
 
     public static String shoopingList="/shopping-list/items";
+    public static String shoopingList2="/shopping-list";
     public static String hashURL="&hash=";
 
-    //https://api.spoonacular.com/mealplanner/martim11/shopping-list/items?hash=062b8768ca06d6fb88ce5da765294dd4f2335670
+    // https://api.spoonacular.com/mealplanner/fabio/shopping-list?apiKey=8731e20fa447459cba57412c132ca440&hash=5d3b1061ef2b1988c45cb88ef0dd40e0e9bb4392
     public static  String includeNutrition="&includeNutrition=true";
      public static String searchIngredient="recipes/queries/analyze";
 
-
+//apiUrl+mealPlaner+username+shoopingList2+api_key+hashURL+hash
 
 }

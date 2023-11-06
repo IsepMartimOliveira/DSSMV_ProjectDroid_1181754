@@ -26,6 +26,7 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         ImageView recepieImageView = root.findViewById(R.id.recepie);
+        ImageView shoopCart=root.findViewById(R.id.shoop);
 
         recepieImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,7 +40,18 @@ public class HomeFragment extends Fragment {
             }
 
         });
+    shoopCart.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(getActivity() instanceof MenuPageNavActivity) {
+                ((MenuPageNavActivity) getActivity()).navigateToShop();
+            }
+            else{
+                Toast.makeText(requireContext(), "Cannot Acess", Toast.LENGTH_SHORT).show();
+            }
 
+        }
+    });
 
         return root;
     }
