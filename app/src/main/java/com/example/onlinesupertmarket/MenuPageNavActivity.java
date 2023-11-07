@@ -63,6 +63,14 @@ public class MenuPageNavActivity extends AppCompatActivity {
         navController.navigate(R.id.nav_home);
     }
     public  void navigateToShop(){navController.navigate(R.id.nav_slideshow);}
+
+ /*   private void clearSharedPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+    }*/
+
 }
 
 

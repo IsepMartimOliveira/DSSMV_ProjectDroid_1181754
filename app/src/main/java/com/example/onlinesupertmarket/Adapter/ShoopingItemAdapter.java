@@ -18,6 +18,7 @@ import java.util.List;
 
 public class ShoopingItemAdapter extends RecyclerView.Adapter<ShoopingItemAdapter.MyViewHolder>{
     List<CartItem> cartItems;
+    OnDeleteMarkClickListener onDeleteMarkClickListener;
 
 
     @NonNull
@@ -27,8 +28,15 @@ public class ShoopingItemAdapter extends RecyclerView.Adapter<ShoopingItemAdapte
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_view_shoppingcart, parent, false);
         return new MyViewHolder(itemView);
     }
-    public ShoopingItemAdapter(List<CartItem> cartItems) {
+
+    public interface OnDeleteMarkClickListener {
+        void onDeleteMarkClick(String id);
+
+    }
+
+    public ShoopingItemAdapter(List<CartItem> cartItems,OnDeleteMarkClickListener onDeleteMarkClickListener) {
         this.cartItems = cartItems;
+        this.onDeleteMarkClickListener=onDeleteMarkClickListener;
 
     }
     @SuppressLint("SetTextI18n")
@@ -38,6 +46,14 @@ public class ShoopingItemAdapter extends RecyclerView.Adapter<ShoopingItemAdapte
         String name = Utils.capitalizeFirstLetter(currentItem.getName());
         holder.name.setText("Name: " + name);
         holder.cost.setText("Price: " + currentItem.getCost().toString()+" €");
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onDeleteMarkClickListener != null) {
+                    onDeleteMarkClickListener.onDeleteMarkClick(currentItem.getId());
+                }
+            }
+        });
 
 
 

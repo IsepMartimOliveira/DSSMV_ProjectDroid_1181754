@@ -1,6 +1,7 @@
 package com.example.onlinesupertmarket.ui.slideshow;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,10 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.onlinesupertmarket.Adapter.RecipeItemAdapter;
 import com.example.onlinesupertmarket.Adapter.ShoopingItemAdapter;
 import com.example.onlinesupertmarket.DTO.*;
 import com.example.onlinesupertmarket.Mapper.Convert;
@@ -28,6 +31,7 @@ import com.example.onlinesupertmarket.databinding.FragmentSlideshowBinding;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,15 +39,18 @@ import java.util.List;
 
 import static com.example.onlinesupertmarket.Network.Utils.*;
 
-public class SlideshowFragment extends Fragment {
+public class SlideshowFragment extends Fragment implements ShoopingItemAdapter.OnDeleteMarkClickListener {
     private String username;
     private String hash;
     private ShoopingItemAdapter shoopingItemAdapter;
     private RecyclerView recyclerView;
     private FragmentSlideshowBinding binding;
     private TextView displayTotal;
-
+    private List<CartItem> cartItems=new ArrayList<>();
     private Button checkOut,continueShopping;
+
+    private ImageView deleteAll;
+    private List<String> allItemIds = new ArrayList<>();
 
     private double totalCost = 0.0;
 
@@ -59,12 +66,12 @@ public class SlideshowFragment extends Fragment {
         View root = binding.getRoot();
 
         displayTotal=root.findViewById(R.id.totalCost);
-
+        deleteAll=root.findViewById(R.id.deleteAllItems);
         checkOut=root.findViewById(R.id.checkOut);
         continueShopping=root.findViewById(R.id.continueShopping);
 
         recyclerView=root.findViewById(R.id.rycicleViewShopping);
-        shoopingItemAdapter=new ShoopingItemAdapter(new ArrayList<>());
+        shoopingItemAdapter=new ShoopingItemAdapter(new ArrayList<>(),this);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(shoopingItemAdapter);
         String shoopingListURL=apiUrl+mealPlaner+username+shoopingList2+api_key+hashURL+hash;
@@ -88,11 +95,17 @@ public class SlideshowFragment extends Fragment {
             }
         });
 
+    deleteAll.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+ //           deleteAllItems();
 
+        }
+    });
 
         return root;
     }
-public void getShoopingCart(String url){
+private void getShoopingCart(String url){
     HttpClient.getRequest(url, new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
@@ -122,11 +135,15 @@ public void getShoopingCart(String url){
                                     return new CartItem(id, name, cost);
                                 }
                         );
-                        List<CartItem> cartItems = shoppingInfoToCartItemDTOMapper.mapList(shoppingInfoDTOs);
+                        cartItems = shoppingInfoToCartItemDTOMapper.mapList(shoppingInfoDTOs);
                         totalCost = 0.0;
                         for (CartItem cartItem : cartItems) {
                             totalCost += cartItem.getCost();
                         }
+                        for (CartItem cartItem : cartItems) {
+                            allItemIds.add(cartItem.getId());
+                        }
+
 
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -162,11 +179,87 @@ public void getShoopingCart(String url){
 
 
 }
+
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
 
     }
+
+    @Override
+    public void onDeleteMarkClick(String id) {
+
+         showDeleteConfirmationDialog(id);
+
+
+    }
+    private void showDeleteConfirmationDialog(String itemToDeleteId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Delete Item");
+        builder.setMessage("Do you wish to delete the item?");
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String url = apiUrl + mealPlaner + username + shoopingList + "/" + itemToDeleteId + api_key + hashURL + hash;
+                deleteItem(url,itemToDeleteId);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // User canceled the deletion, do nothing
+            }
+        });
+        builder.create().show();
+    }
+
+
+    private void deleteItem(String url, String itemToDeleteId) {
+        HttpClient.deleteRequest(url, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                // Handle the failure here (e.g., show an error message)
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (CartItem item : cartItems) {
+                                if (item.getId().equals(itemToDeleteId)) {
+                                    cartItems.remove(item);
+                                    shoopingItemAdapter.notifyDataSetChanged();
+                                    break;
+                                }
+                                String shoopingListURL = apiUrl + mealPlaner + username + shoopingList2 + api_key + hashURL + hash;
+                                getShoopingCart(shoopingListURL);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+/*    private void deleteAllItems() {
+        for (String itemId : allItemIds) {
+            String url = apiUrl + mealPlaner + username + shoopingList + "/" + itemId + api_key + hashURL + hash;
+            deleteItem(url, itemId);
+        }
+        allItemIds.clear();
+
+        String shoopingListURL = apiUrl + mealPlaner + username + shoopingList2 + api_key + hashURL + hash;
+        getShoopingCart(shoopingListURL);
+
+
+    }
+*/
+
+
+
 
 }
