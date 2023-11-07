@@ -228,7 +228,7 @@ private void getShoopingCart(String url){
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.isSuccessful()) {
                     getActivity().runOnUiThread(new Runnable() {
-                        @SuppressLint("NotifyDataSetChanged")
+
                         @Override
                         public void run() {
                             CartItem itemToRemove = null;
