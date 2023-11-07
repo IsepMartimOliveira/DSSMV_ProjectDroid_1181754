@@ -1,5 +1,6 @@
 package com.example.onlinesupertmarket.ui.slideshow;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -8,10 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -53,6 +51,8 @@ public class SlideshowFragment extends Fragment implements ShoopingItemAdapter.O
     private List<String> allItemIds = new ArrayList<>();
 
     private double totalCost = 0.0;
+    private LinearLayout emptyView ;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -64,6 +64,7 @@ public class SlideshowFragment extends Fragment implements ShoopingItemAdapter.O
         username = sharedPreferences.getString("username", "");
         hash = sharedPreferences.getString("hash", "");
         View root = binding.getRoot();
+        emptyView = root.findViewById(R.id.emptyView);
 
         displayTotal=root.findViewById(R.id.totalCost);
         deleteAll=root.findViewById(R.id.deleteAllItems);
@@ -227,23 +228,33 @@ private void getShoopingCart(String url){
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.isSuccessful()) {
                     getActivity().runOnUiThread(new Runnable() {
+                        @SuppressLint("NotifyDataSetChanged")
                         @Override
                         public void run() {
+                            CartItem itemToRemove = null;
                             for (CartItem item : cartItems) {
                                 if (item.getId().equals(itemToDeleteId)) {
-                                    cartItems.remove(item);
-                                    shoopingItemAdapter.notifyDataSetChanged();
+                                    itemToRemove = item;
                                     break;
                                 }
+                            }
+
+                            if (itemToRemove != null) {
+                                cartItems.remove(itemToRemove);
+                                shoopingItemAdapter.notifyDataSetChanged();
                                 String shoopingListURL = apiUrl + mealPlaner + username + shoopingList2 + api_key + hashURL + hash;
                                 getShoopingCart(shoopingListURL);
                             }
+
+
+
                         }
                     });
                 }
             }
         });
     }
+
 
 /*    private void deleteAllItems() {
         for (String itemId : allItemIds) {

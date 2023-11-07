@@ -2,9 +2,10 @@ package com.example.onlinesupertmarket.Network;
 
 public class Utils {
     public static String apiUrl="https://api.spoonacular.com/";
-    public static String api_key="?apiKey=8731e20fa447459cba57412c132ca440";
+    public static String api_key="?apiKey=7e93008d8c034f0ca12b7face33bc4b8";
     //8d7e8f2c62fb434182d0bc9f11914e08
     //8731e20fa447459cba57412c132ca440
+    // 7e93008d8c034f0ca12b7face33bc4b8
     public static String userCreate="users/connect";
     public static String recipe="recipes/complexSearch";
     public static String cuisine="&cuisine=";
