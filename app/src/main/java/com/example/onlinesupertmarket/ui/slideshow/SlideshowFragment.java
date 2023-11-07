@@ -99,7 +99,7 @@ public class SlideshowFragment extends Fragment implements ShoopingItemAdapter.O
     deleteAll.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
- //           deleteAllItems();
+           deleteAllItems();
 
         }
     });
@@ -153,10 +153,11 @@ private void getShoopingCart(String url){
                                 if (!cartItems.isEmpty()) {
                                     displayTotal.setVisibility(View.VISIBLE);
                                     displayTotal.setText("Total Price: " + String.format("%.2f", totalCost) + " €");
+                                  //  deleteAll.setVisibility(View.VISIBLE);
                                 } else {
                                     displayTotal.setVisibility(View.GONE);
+                                   // deleteAll.setVisibility(View.GONE);
                                 }
-
                             }
 
 
@@ -180,6 +181,7 @@ private void getShoopingCart(String url){
 
 
 }
+
 
 
     @Override
@@ -242,6 +244,11 @@ private void getShoopingCart(String url){
                             if (itemToRemove != null) {
                                 cartItems.remove(itemToRemove);
                                 shoopingItemAdapter.notifyDataSetChanged();
+                                if(cartItems.isEmpty()){
+                                //    deleteAll.setVisibility(View.GONE);
+                                    shoopingItemAdapter.clear();
+                                    displayTotal.setVisibility(View.GONE);
+                                }
                                 String shoopingListURL = apiUrl + mealPlaner + username + shoopingList2 + api_key + hashURL + hash;
                                 getShoopingCart(shoopingListURL);
                             }
@@ -256,20 +263,17 @@ private void getShoopingCart(String url){
     }
 
 
-/*    private void deleteAllItems() {
+   private void deleteAllItems() {
         for (String itemId : allItemIds) {
             String url = apiUrl + mealPlaner + username + shoopingList + "/" + itemId + api_key + hashURL + hash;
             deleteItem(url, itemId);
         }
         allItemIds.clear();
+      // deleteAll.setVisibility(View.GONE);
+       displayTotal.setVisibility(View.GONE);
+       shoopingItemAdapter.clear();
 
-        String shoopingListURL = apiUrl + mealPlaner + username + shoopingList2 + api_key + hashURL + hash;
-        getShoopingCart(shoopingListURL);
-
-
-    }
-*/
-
+   }
 
 
 

@@ -82,4 +82,10 @@ public class ShoopingItemAdapter extends RecyclerView.Adapter<ShoopingItemAdapte
         cartItems.addAll(newItems);
         notifyDataSetChanged();
     }
+    public void clear() {
+        int size = cartItems.size();
+        cartItems.clear();
+        notifyItemRangeRemoved(0, size);
+    }
+
 }
