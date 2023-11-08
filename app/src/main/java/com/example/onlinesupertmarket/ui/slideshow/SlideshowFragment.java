@@ -152,7 +152,7 @@ private void getShoopingCart(String url){
                                 shoopingItemAdapter.updateData(cartItems);
                                 if (!cartItems.isEmpty()) {
                                     displayTotal.setVisibility(View.VISIBLE);
-                                    displayTotal.setText("TOTAL(with IVA):   " + String.format("%.2f", totalCost) + " €");
+                                    displayTotal.setText("TOTAL: " + String.format("%.2f", totalCost) + " €");
                                 } else {
                                     displayTotal.setVisibility(View.GONE);
                                 }
