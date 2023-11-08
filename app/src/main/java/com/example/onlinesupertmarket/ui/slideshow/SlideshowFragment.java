@@ -99,7 +99,7 @@ public class SlideshowFragment extends Fragment implements ShoopingItemAdapter.O
     deleteAll.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-           deleteAllItems();
+            showDeleteAllConfirmationDialog();
 
         }
     });
@@ -152,11 +152,9 @@ private void getShoopingCart(String url){
                                 shoopingItemAdapter.updateData(cartItems);
                                 if (!cartItems.isEmpty()) {
                                     displayTotal.setVisibility(View.VISIBLE);
-                                    displayTotal.setText("Total Price: " + String.format("%.2f", totalCost) + " €");
-                                  //  deleteAll.setVisibility(View.VISIBLE);
+                                    displayTotal.setText("TOTAL(with IVA):   " + String.format("%.2f", totalCost) + " €");
                                 } else {
                                     displayTotal.setVisibility(View.GONE);
-                                   // deleteAll.setVisibility(View.GONE);
                                 }
                             }
 
@@ -212,7 +210,6 @@ private void getShoopingCart(String url){
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // User canceled the deletion, do nothing
             }
         });
         builder.create().show();
@@ -223,7 +220,6 @@ private void getShoopingCart(String url){
         HttpClient.deleteRequest(url, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                // Handle the failure here (e.g., show an error message)
             }
 
             @Override
@@ -245,7 +241,6 @@ private void getShoopingCart(String url){
                                 cartItems.remove(itemToRemove);
                                 shoopingItemAdapter.notifyDataSetChanged();
                                 if(cartItems.isEmpty()){
-                                //    deleteAll.setVisibility(View.GONE);
                                     shoopingItemAdapter.clear();
                                     displayTotal.setVisibility(View.GONE);
                                 }
@@ -269,11 +264,27 @@ private void getShoopingCart(String url){
             deleteItem(url, itemId);
         }
         allItemIds.clear();
-      // deleteAll.setVisibility(View.GONE);
        displayTotal.setVisibility(View.GONE);
        shoopingItemAdapter.clear();
 
    }
+    private void showDeleteAllConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Delete All Items");
+        builder.setMessage("Do you wish to delete all items?");
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteAllItems();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        builder.create().show();
+    }
 
 
 
