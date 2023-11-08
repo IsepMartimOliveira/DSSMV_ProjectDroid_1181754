@@ -1,6 +1,5 @@
 package com.example.onlinesupertmarket.ui.slideshow;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -16,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.onlinesupertmarket.Adapter.RecipeItemAdapter;
+import com.example.onlinesupertmarket.Decoration.ItemSpacingDecoration;
 import com.example.onlinesupertmarket.Adapter.ShoopingItemAdapter;
 import com.example.onlinesupertmarket.DTO.*;
 import com.example.onlinesupertmarket.Mapper.Convert;
@@ -70,8 +69,11 @@ public class SlideshowFragment extends Fragment implements ShoopingItemAdapter.O
         deleteAll=root.findViewById(R.id.deleteAllItems);
         checkOut=root.findViewById(R.id.checkOut);
         continueShopping=root.findViewById(R.id.continueShopping);
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.item_spacing);
 
         recyclerView=root.findViewById(R.id.rycicleViewShopping);
+        recyclerView.addItemDecoration(new ItemSpacingDecoration(spacingInPixels));
+
         shoopingItemAdapter=new ShoopingItemAdapter(new ArrayList<>(),this);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(shoopingItemAdapter);
