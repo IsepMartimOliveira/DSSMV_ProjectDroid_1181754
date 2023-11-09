@@ -1,9 +1,9 @@
 package com.example.onlinesupertmarket.Model;
 
-public class ShoppingCartItem {
+public class ShoppingCart {
     private String item;
 
-    public ShoppingCartItem(String item) {
+    public ShoppingCart(String item) {
         this.item = item;
     }
 

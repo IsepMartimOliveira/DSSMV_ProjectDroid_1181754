@@ -1,11 +1,11 @@
 package com.example.onlinesupertmarket.Model;
 
-public class ExtendedIngridients {
+public class Ingredients {
 
     private String name;
     private  String image;
 
-    public ExtendedIngridients(String name, String image) {
+    public Ingredients(String name, String image) {
         this.name = name;
         this.image = image;
     }

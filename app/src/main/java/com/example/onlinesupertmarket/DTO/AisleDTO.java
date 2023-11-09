@@ -1,7 +1,5 @@
 package com.example.onlinesupertmarket.DTO;
 
-import com.example.onlinesupertmarket.Model.ShoppingCartItem;
-
 import java.util.List;
 
 public class AisleDTO {

@@ -1,4 +1,4 @@
- @startuml
+@startuml
 left to right direction
 
 actor User
@@ -10,15 +10,18 @@ rectangle "Acount" {
 
 rectangle "Recipe"{
 User --> (Choose a recipe)
-User -->(Show details about a ingredient)
-User -->(Show substitutes of  a ingredient)
+User -->(Show ingredient off a recipe)
 }
 
 rectangle "Shooping List" {
 
-    User -->(Add a recipe to the shopping list)
+    User -->(Add a ingredient to the shopping list)
+    User -->(Add all ingredients to the shopping list)
+
     User -->(Show the shopping list )
-    User -->(Remove a item from the shopping list)
+    User -->(Remove an item from the shopping list)
+    User -->(Remove all items from the shopping list)
+
 }
 
 

@@ -20,14 +20,12 @@ import com.example.onlinesupertmarket.Adapter.RecipeItemAdapter;
 import com.example.onlinesupertmarket.DTO.*;
 import com.example.onlinesupertmarket.Mapper.Convert;
 import com.example.onlinesupertmarket.Mapper.DTOMapper;
-import com.example.onlinesupertmarket.Model.ExtendedIngridients;
+import com.example.onlinesupertmarket.Model.Ingredients;
 import com.example.onlinesupertmarket.Model.RecipeItem;
-import com.example.onlinesupertmarket.Model.ShoopingCart;
-import com.example.onlinesupertmarket.Model.ShoppingCartItem;
+import com.example.onlinesupertmarket.Model.ShoppingCart;
 import com.example.onlinesupertmarket.Network.HttpClient;
 import com.example.onlinesupertmarket.R;
 import com.example.onlinesupertmarket.databinding.FragmentGalleryBinding;
-import com.example.onlinesupertmarket.registerPage;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -39,7 +37,7 @@ import java.util.List;
 
 import static com.example.onlinesupertmarket.Network.Utils.*;
 
-public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQuestionMarkClickListener {
+public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQuestionMarkClickListener,IngredientItemAdapter.OnAddMarkClickListener {
     private String username;
     private String hash;
     private String selectedRecipeTitle;
@@ -251,8 +249,8 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
 
     private void sendIngredientToBasket(String ingredientName,final int totalIngredients) {
         String shoppingUrl=apiUrl+mealPlaner+username+shoopingList+api_key+hashURL+hash;
-        ShoppingCartItem shoppingCartItem = new ShoppingCartItem(ingredientName);
-        String ingredientJson = Convert.convertToJson(shoppingCartItem);
+        ShoppingCart shoppingCart = new ShoppingCart(ingredientName);
+        String ingredientJson = Convert.convertToJson(shoppingCart);
         successfulAdditions++;
         HttpClient.postRequest(shoppingUrl, ingredientJson, new Callback() {
             @Override
@@ -294,8 +292,8 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
                         if (recepieInformationDTO != null && recepieInformationDTO.getExtendedIngredients() != null && !recepieInformationDTO.getExtendedIngredients().isEmpty()) {
                             List<ExtendedIngridientsDTO> extendedIngridientsDTOS = recepieInformationDTO.getExtendedIngredients();
 
-                            DTOMapper<ExtendedIngridientsDTO, ExtendedIngridients> ingredientMapper = new DTOMapper<>(dto -> new ExtendedIngridients(dto.getName(),dto.getImage()));
-                            List<ExtendedIngridients> ingredients = ingredientMapper.mapList(extendedIngridientsDTOS);
+                            DTOMapper<ExtendedIngridientsDTO, Ingredients> ingredientMapper = new DTOMapper<>(dto -> new Ingredients(dto.getName(),dto.getImage()));
+                            List<Ingredients> ingredients = ingredientMapper.mapList(extendedIngridientsDTOS);
                             Log.d("Ingredients List Size", String.valueOf(ingredients.size()));
 
 
@@ -324,12 +322,12 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
         });
     }
 
-    private void showIngredientsAlertDialog(List<ExtendedIngridients> ingredients) {
+    private void showIngredientsAlertDialog(List<Ingredients> ingredients) {
         View alertDialogView = getLayoutInflater().inflate(R.layout.alert_dialog_ingridients, null);
         recyclerView2 = alertDialogView.findViewById(R.id.recyclerView2);
 
 
-        ingredientAdapter=new IngredientItemAdapter(new ArrayList<>());
+        ingredientAdapter=new IngredientItemAdapter(new ArrayList<>(),this);
         recyclerView2.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView2.setAdapter(ingredientAdapter);
 
@@ -347,11 +345,11 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
         });
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                List<ExtendedIngridients> ingredients = ingredientAdapter.getIngredientList();
+                List<Ingredients> ingredients = ingredientAdapter.getIngredientList();
 
                 if (ingredients != null && !ingredients.isEmpty()) {
 
-                    for (ExtendedIngridients ingredient : ingredients) {
+                    for (Ingredients ingredient : ingredients) {
                         String ingredientName = ingredient.getName();
 
                         sendIngredientToBasket(ingredientName,ingredients.size());
@@ -380,7 +378,7 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Success");
-                builder.setMessage("The ingredients have been added to your shopping list.");
+                builder.setMessage("The ingredient/ingredients have been added to your shopping list.");
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
@@ -391,21 +389,10 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
         });
     }
 
-    private void showErrorAlertDialog() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Error");
-                builder.setMessage("Failed to add ingredients to the shopping list.");
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.create().show();
-            }
-        });
-    }
 
+
+    @Override
+    public void onAddMarkClick(String title) {
+        sendIngredientToBasket(title,1);
+    }
 }

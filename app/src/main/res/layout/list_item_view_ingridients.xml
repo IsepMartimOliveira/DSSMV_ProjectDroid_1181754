@@ -20,12 +20,21 @@
                 android:orientation="horizontal">
 
             <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
                     android:layout_height="38dp"
                     android:id="@+id/name"
                     android:text="Name:"
                     android:gravity="center_vertical"
             />
+            <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="25dp"
+                    android:src="@drawable/baseline_add_24"
+                    android:id="@+id/addToBasket">
+
+            </ImageView>
 
 
         </LinearLayout>

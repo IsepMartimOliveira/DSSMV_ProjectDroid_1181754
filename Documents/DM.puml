@@ -7,25 +7,34 @@ Hash
 Password
 }
 
-class Recipe{
+
+class RecipeItem{
 Id
 Title
 Image
-Price
 }
-
 class Ingredients{
-name
+Name
 Image
 Price
 }
 
-class ShoopingCart{
 
+class ShoopingCart{
+Item
 
 }
-User "1" -- "0..*" Recipe: acesses >
-Recipe"1" --"0..*" Ingredients:has >
-User"1" --"0..*" ShoopingCart   :acesses >
+
+class CartItem{
+Id
+Name
+Cost
+}
+
+User"1"--"1..*" CartItem:can access >
+User "1" -- "1..*" RecipeItem: can access >
+RecipeItem"1"--left"1..*"Ingredients:has >
+CartItem"1..*" --"1" ShoopingCart   :shows <
 Ingredients"1..*" -- "1" ShoopingCart: added to >
+
 @enduml
