@@ -1,7 +1,7 @@
 @startuml
 autoactivate on
 autonumber
-title As a User i want to add one ingredient to the Shopping cart
+title As a User i want to add all ingredients to the Shopping cart
 autonumber
 actor "User" as US
 participant GalleryFragment as RP
@@ -21,8 +21,8 @@ participant IngridientItemAdapter as SP
 US->RP:Add all button
 RP-->US:checks if the data isn´t null
 
-US->RP:onAddMarkClick(String title)
-RP->RP:sendIngredientToBasket(title,1);
+
+US->RP:sendIngredientToBasket(String ingredientName,final int totalIngredients);
 RP->Utils:apiUrl+mealPlaner+username+shoopingList+api_key+hashURL+hash
 Utils-->RP:String shoppingUrl
 RP->DTO:new ShoppingCart(ingredientName)

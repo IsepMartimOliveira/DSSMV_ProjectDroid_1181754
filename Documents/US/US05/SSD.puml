@@ -3,12 +3,12 @@
 actor "User" as MD
 title As a User i want to add all ingredients to the Shopping cart
 activate MD
-MD -> ":System" : User clicks on  add ingridient
-":System" --> ":System" : Gets ingridient
+MD -> ":System" : User clicks on  add all
+":System" --> ":System" : Gets ingridients
 ":System" --> ":System" : Validates data(can not be null)
 alt successful case - data is accepted
 activate ":System"
-":System" --> MD : Adds the  ingridient
+":System" --> MD : Adds the diferent ingridients
 deactivate ":System"
 
 end
