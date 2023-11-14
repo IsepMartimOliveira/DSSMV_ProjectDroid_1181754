@@ -2,30 +2,24 @@ package com.example.onlinesupertmarket.DTO;
 
 public class UserDTO {
     private String username;
-    private String firstName;
-    private String lastName;
-    private String email;
+    private String spoonacularPassword;
+    private String hash;
 
-    public UserDTO(String username, String firstName, String lastName, String email) {
+    public UserDTO(String username, String spoonacularPassword, String hash) {
         this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
+        this.spoonacularPassword = spoonacularPassword;
+        this.hash = hash;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getSpoonacularPassword() {
+        return spoonacularPassword;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
+    public String getHash() {
+        return hash;
     }
 }

@@ -12,7 +12,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.onlinesupertmarket.DTO.UserDTO;
+import com.example.onlinesupertmarket.DTO.UserRequest;
 import com.example.onlinesupertmarket.Mapper.Convert;
+import com.example.onlinesupertmarket.Mapper.DTOMapper;
 import com.example.onlinesupertmarket.Model.User;
 import com.example.onlinesupertmarket.Network.HttpClient;
 import okhttp3.Call;
@@ -102,9 +104,10 @@ public class registerPage extends AppCompatActivity {
         String lastNameEditText = lastName.getText().toString();
         String emailEditText = email.getText().toString();
 
-        UserDTO userDTO = new UserDTO(usernameEditText, firstNameEditText, lastNameEditText, emailEditText);
+        UserRequest userRequest=new UserRequest(usernameEditText, firstNameEditText, lastNameEditText, emailEditText);
 
-        String jsonBody = Convert.convertToJson(userDTO);
+
+        String jsonBody = Convert.convertToJson(userRequest);
 
         String postUrl = apiUrl+userCreate+api_key;
 
@@ -121,10 +124,22 @@ public class registerPage extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     final String responseBody = response.body().string();
+                    UserDTO userResponse=Convert.convertFromJson(responseBody,UserDTO.class);
+
+                    DTOMapper<UserDTO, User> userDTOMapper = new DTOMapper<>(userDTO -> {
+                        String name = userDTO.getUsername();
+                        String hash = userDTO.getHash();
+                        String password = userDTO.getSpoonacularPassword();
+                        return new User(name, password, hash);
+                    });
+                    User user = userDTOMapper.map(userResponse);
+
+
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            User user = Convert.convertFromJson(responseBody, User.class);
+
+
                             saveUserCredentials(user.getUsername(), user.getHash());
                             saveUserForWelcomePage(user.getUsername(),user.getSpoonacularPassword());
 
