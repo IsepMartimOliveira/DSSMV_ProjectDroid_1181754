@@ -1,0 +1,23 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+actor "User" as MD
+title As a User i want to add all ingredients to the Shopping cart
+activate MD
+MD -> ":System" : User clicks on  add all
+":System" --> ":System" : Gets ingridients
+":System" --> ":System" : Validates data(can not be null)
+alt successful case - data is accepted
+activate ":System"
+":System" --> MD : Adds the diferent ingridients
+deactivate ":System"
+
+end
+
+alt failure case - data is not accepted
+activate ":System"
+":System" --> MD : Shows error message
+deactivate ":System"
+
+end
+deactivate MD
+@enduml

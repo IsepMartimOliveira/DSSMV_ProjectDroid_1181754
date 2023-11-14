@@ -1,0 +1,24 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+actor "User" as MD
+title As a User i want to choose a Recepie
+
+activate MD
+MD -> ":System" : User chooses  data in the different Spinners
+":System" --> ":System" : Gets data
+":System" --> ":System" : Validates data(can not be null)
+alt successful case - data is accepted
+activate ":System"
+":System" --> MD : Shows the different recipes
+deactivate ":System"
+
+end
+
+alt failure case - data is not accepted
+activate ":System"
+":System" --> MD : Shows error message
+deactivate ":System"
+
+end
+deactivate MD
+@enduml

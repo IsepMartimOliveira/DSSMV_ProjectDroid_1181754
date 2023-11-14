@@ -1,0 +1,45 @@
+@startuml
+autoactivate on
+autonumber
+title As a User i want to add all ingredients to the Shopping cart
+autonumber
+actor "User" as US
+participant GalleryFragment as RP
+participant Utils as Utils
+
+participant HttpClients as HTTP
+participant "Converter" as CV
+
+participant "ShoopingCartItem" as  DTO
+participant "RecipeItemDTO" as DTO2
+
+participant DTOMapper as Mapper
+
+participant "RecipeItem" as User
+participant IngridientItemAdapter as SP
+
+US->RP:Add all button
+RP-->US:checks if the data isn´t null
+
+
+US->RP:sendIngredientToBasket(String ingredientName,final int totalIngredients);
+RP->Utils:apiUrl+mealPlaner+username+shoopingList+api_key+hashURL+hash
+Utils-->RP:String shoppingUrl
+RP->DTO:new ShoppingCart(ingredientName)
+DTO-->RP:shoppingCart
+RP->CV:Convert.convertToJson(shoppingCart)
+CV-->RP:ingredientJson
+RP->RP: successfulAdditions++
+RP->HTTP:postRequest(shoppingUrl, ingredientJson, new Callback())
+alt postRequest == successful
+HTTP-->RP:response
+
+alt successfulAdditions==totalIngredients
+RP->RP:showSuccessAlertDialog();
+RP->RP: successfulAdditions=0
+end
+end
+RP-->US:show success message
+
+
+@enduml

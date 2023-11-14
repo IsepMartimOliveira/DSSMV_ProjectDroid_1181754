@@ -1,0 +1,43 @@
+@startuml
+autoactivate on
+autonumber
+title As a User i want to see  the different ingredients
+autonumber
+actor "User" as US
+participant GalleryFragment as RP
+participant HttpClients as HTTP
+participant "Converter" as CV
+
+participant "RecipeDTO" as  DTO
+participant "RecipeItemDTO" as DTO2
+
+participant DTOMapper as Mapper
+
+participant "RecipeItem" as User
+participant IngridientItemAdapter as SP
+
+US->RP:Selects recepie
+RP-->US:checks if the data isn´t null
+
+US->RP:onQuestionMarkClick(Integer id,String title)
+
+RP->HTTP:getRequest(url,callback)
+alt postRequest == successful
+HTTP-->RP:response
+RP->RP:jsonResponse = response.body().string();
+RP->CV:convertFromJson(jsonResponse,RecepieInformationDTO.class)
+CV->DTO:convert to RecepieDTO
+DTO-->RP:recepieInformationDTO
+RP->DTO2:recepieInformationDTO.getExtendedIngredients()
+DTO2-->RP: List<ExtendedIngridientsDTO> extendedIngridientsDTOS
+RP->Mapper: DTOMapper<ExtendedIngridientsDTO, Ingredients>
+Mapper-->RP:ingredientMapper
+RP->User:ingredientMapper.mapList(extendedIngridientsDTOS)
+User-->RP: List<Ingredients> ingredients
+RP->SP:showIngredientsAlertDialog(ingredients)
+SP-->RP:updates view
+end
+RP-->US:shows ingridients
+
+
+@enduml

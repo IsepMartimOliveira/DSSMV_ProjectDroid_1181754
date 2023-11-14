@@ -5,29 +5,35 @@ title As a User i want to register an account
 autonumber
 actor "User" as US
 participant registerPage as RP
-participant "UserDTO" as  DTO
+participant "UserRequest" as Request
 participant "Converter" as CV
+participant "UserDTO" as  DTO
+
 participant Utils as Utils
 participant HttpClients as HTTP
+participant DTOMapper as Mapper
 
 participant "User" as User
-
+participant SharedPreferences as SP
 
 US->RP:Inserts required data
 RP-->US:checks if the data isn´t null
 US->RP:makePostRequest()
-RP->DTO:UserDTO(usernameEditText, firstNameEditText, lastNameEditText, emailEditText)
-DTO-->RP:userDTO
-RP->CV:convertToJson(userDTO)
+RP->Request:UserRequest(usernameEditText, firstNameEditText, lastNameEditText, emailEditText)
+Request-->RP:userRequest
+RP->CV:convertToJson(userRequest)
 CV-->RP:jsonBody
-RP->Utils:
+RP->Utils:create URL from Utils
 Utils-->RP:postURL
 RP->HTTP:postRequest(postURL,jsonBody,callback)
 alt postRequest == successful
 HTTP-->RP:responseBody
-RP->CV:convertFromJson(responseBody,User.class)
-CV->User
-User-->RP:user
+RP->CV:convertFromJson(responseBody,UserDTO.class)
+CV->DTO:convert to UserDTO
+DTO-->RP:userResponse
+RP->Mapper:DTOMapper<UserDTO,User>
+Mapper->User:convert to User
+User-->RP:User user
 RP->US:Account created with success
 end
 
