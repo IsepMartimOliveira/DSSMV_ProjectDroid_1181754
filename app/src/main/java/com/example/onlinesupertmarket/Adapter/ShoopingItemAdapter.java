@@ -33,6 +33,10 @@ public class ShoopingItemAdapter extends RecyclerView.Adapter<ShoopingItemAdapte
         void onDeleteMarkClick(String id);
 
     }
+    public List<CartItem> getData() {
+        return cartItems;
+    }
+
 
     public ShoopingItemAdapter(List<CartItem> cartItems,OnDeleteMarkClickListener onDeleteMarkClickListener) {
         this.cartItems = cartItems;
