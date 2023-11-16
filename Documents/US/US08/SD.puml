@@ -1,0 +1,38 @@
+@startuml
+actor User as User
+participant "Android Fragment" as Fragment
+participant "SlideshowFragment" as SlideshowFragment
+participant "SlideshowViewModel" as SlideshowViewModel
+participant "ShoppingAdapter" as ShoppingAdapter
+
+
+User -> Fragment: Start
+activate Fragment
+
+Fragment -> SlideshowFragment: onCreate
+activate SlideshowFragment
+
+SlideshowFragment -> SlideshowViewModel: deleteAllItems(username, hash)
+activate SlideshowViewModel
+
+SlideshowViewModel -> SlideshowViewModel: iterate through cartItems
+loop for each cartItem
+    SlideshowViewModel -> SlideshowViewModel: get cartItem ID
+    SlideshowViewModel -> SlideshowViewModel: call deleteItem(username, hash, itemId)
+end loop
+
+deactivate SlideshowViewModel
+
+activate SlideshowFragment
+SlideshowFragment -> ShoppingAdapter: handleDeletedItem(deletedItemId) for each item
+activate ShoppingAdapter
+ShoppingAdapter -> SlideshowFragment: remove all items
+deactivate ShoppingAdapter
+
+SlideshowFragment -> SlideshowFragment: updateTotalCostView(calculateTotalCost(cartItems))
+SlideshowFragment --> Fragment: Update UI with Data
+
+deactivate SlideshowFragment
+Fragment-->User:Shows updated UI
+deactivate Fragment
+@enduml

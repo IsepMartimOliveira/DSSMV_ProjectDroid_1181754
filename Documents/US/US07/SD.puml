@@ -1,0 +1,37 @@
+@startuml
+actor User as User
+participant "Android Fragment" as Fragment
+participant "SlideshowFragment" as SlideshowFragment
+participant "SlideshowViewModel" as SlideshowViewModel
+participant "HttpClient" as HttpClient
+database "Spoonacular API" as Server
+participant "Convert" as Convert
+participant "DTOMapper" as DTOMapper
+participant "ShoppingAdapter" as ShoppingAdapter
+User->Fragment:start
+Fragment->SlideshowFragment: onCreate
+SlideshowFragment->SlideshowViewModel: observe LiveData
+SlideshowFragment -> SlideshowViewModel: deleteItem(username, hash, itemId)
+activate SlideshowViewModel
+SlideshowViewModel -> SlideshowViewModel: construct URL for delete
+SlideshowViewModel -> HttpClient: deleteRequest(url, callback)
+activate HttpClient
+HttpClient -> Server: send DELETE request
+activate Server
+Server --> HttpClient: process delete request
+deactivate Server
+HttpClient --> SlideshowViewModel: receive response
+deactivate HttpClient
+SlideshowViewModel -> SlideshowFragment: getDeletedItemLiveData().observe()
+deactivate SlideshowViewModel
+activate SlideshowFragment
+SlideshowFragment -> ShoppingAdapter: handleDeletedItem(deletedItemId)
+activate ShoppingAdapter
+ShoppingAdapter -> SlideshowFragment: remove item from data
+deactivate ShoppingAdapter
+SlideshowFragment -> SlideshowFragment: updateTotalCostView(calculateTotalCost(cartItems))
+SlideshowFragment --> Fragment: Update UI with Data
+deactivate SlideshowFragment
+Fragment --> User: Display Updated UI
+
+@enduml
