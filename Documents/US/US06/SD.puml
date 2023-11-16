@@ -1,0 +1,55 @@
+@startuml
+actor User as User
+participant "Android Fragment" as Fragment
+participant "SlideshowFragment" as SlideshowFragment
+participant "SlideshowViewModel" as SlideshowViewModel
+participant "HttpClient" as HttpClient
+database "Spoonacular API" as Server
+participant "Convert" as Convert
+participant "DTOMapper" as DTOMapper
+participant "ShoppingAdapter" as ShoppingAdapter
+User->Fragment:start
+Note left of Fragment: SharedPreferences\n(username, hash)
+Fragment->SlideshowFragment: onCreate
+SlideshowFragment -> SlideshowViewModel: observe LiveData
+SlideshowFragment -> SlideshowViewModel: fetchShoppingCart(username, hash)
+activate SlideshowViewModel
+SlideshowViewModel -> SlideshowViewModel: construct URL
+SlideshowViewModel -> HttpClient: getRequest(url, callback)
+activate HttpClient
+HttpClient -> Server: GET request
+activate Server
+Server --> HttpClient:  response
+deactivate Server
+HttpClient --> SlideshowViewModel: receive response
+deactivate HttpClient
+SlideshowViewModel -> Convert: convertFromJson(jsonResponse, CartItemResponseDTO.class)
+activate Convert
+Convert --> SlideshowViewModel: cartItemResponseDTO
+deactivate Convert
+
+SlideshowViewModel -> SlideshowViewModel: process cartItemResponseDTO\nand check aisles
+alt cartItemResponseDTO.getAisles() not empty then
+  SlideshowViewModel -> SlideshowViewModel: extract ShoppingInfoDTOs from aisles
+  SlideshowViewModel -> DTOMapper: create DTOMapper(ShoppingInfoDTO -> CartItem)
+  activate DTOMapper
+  DTOMapper -> DTOMapper: mapList(shoppingInfoDTOs)\n(ShoppingInfoDTO -> CartItem)
+  DTOMapper -> SlideshowViewModel: update cartItems list
+  deactivate DTOMapper
+
+end if
+deactivate SlideshowViewModel
+
+SlideshowViewModel -> SlideshowFragment: getCartItemsLiveData().observe()
+activate SlideshowFragment
+SlideshowFragment -> ShoppingAdapter: updateData(cartItems)
+activate ShoppingAdapter
+ShoppingAdapter -> SlideshowFragment: updated data
+deactivate ShoppingAdapter
+SlideshowFragment -> SlideshowFragment: calculateTotalCost(cartItems)
+SlideshowFragment -> SlideshowFragment: updateTotalCostView(totalCost)
+SlideshowFragment --> Fragment: Update UI with Data
+deactivate SlideShowFragment
+Fragment --> User: Display Updated UI
+
+@enduml
