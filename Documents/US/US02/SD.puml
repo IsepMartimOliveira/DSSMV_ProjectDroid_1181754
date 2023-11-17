@@ -1,42 +1,54 @@
 @startuml
-autoactivate on
-autonumber
-title As a User i want to see   recipes
-autonumber
-actor "User" as US
-participant GalleryFragment as RP
-participant HttpClients as HTTP
-participant "Converter" as CV
+actor User as User
+participant "Android Fragment" as Fragment
 
-participant "RecipeDTO" as  DTO
-participant "RecipeItemDTO" as DTO2
+participant "GalleryFragment" as GalleryFragment
+participant "GalleryViewModel" as GalleryViewModel
+participant "HttpClient" as HttpClient
+database "Spoonacular API" as Server
+participant "Convert" as Convert
+participant "DTOMapper" as DTOMapper
+participant "RecipeItemAdapter" as RecipeItemAdapter
+User->Fragment:start
+Note left of Fragment: SharedPreferences\n(username, hash)
+Fragment->GalleryFragment: onCreate
+GalleryFragment -> GalleryViewModel: observe LiveData
+GalleryFragment -> GalleryViewModel: getRecipe(url)
+activate GalleryViewModel
+GalleryViewModel -> HttpClient: getRequest(url, callback)
+activate HttpClient
+HttpClient -> Server: GET request
+activate Server
+Server --> HttpClient: response
+deactivate Server
+HttpClient --> GalleryViewModel: receive response
+deactivate HttpClient
+GalleryViewModel -> Convert: convertFromJson(jsonResponse, RecipeDTO.class)
+activate Convert
+Convert --> GalleryViewModel: recipeDTO
+deactivate Convert
 
-participant DTOMapper as Mapper
+alt recipeDTO.getResults() not empty then
+    GalleryViewModel -> GalleryViewModel: extract RecipeItemDTO
+    GalleryViewModel -> GalleryViewModel: create a List<RecepiItemDTO> recipeItemDTOS
 
-participant "RecipeItem" as User
-participant RecipeItemAdapter as SP
+    GalleryViewModel -> DTOMapper:DTOMapper(RecipeItemDTO -> RecipeItem)
 
-US->RP:Inserts required data
-RP-->US:checks if the data isn´t null
-US->RP:getRecepie(String urlApi)
-
-RP->HTTP:.getRequest(urlApi,new Callback)
-alt postRequest == successful
-HTTP-->RP:response
-RP->RP:jsonResponse = response.body().string();
-RP->CV:convertFromJson(jsonResponse,RecipeDTO.class)
-CV->DTO:convert to RecepieDTO
-DTO-->RP:recipeDTO
-RP->DTO2:recipeDTO.getResults();
-DTO2-->RP: List<RecipeItemDTO> recipeItemDTOS
-RP->Mapper: DTOMapper<RecipeItemDTO, RecipeItem>
-Mapper-->RP:recipeItemMapper
-RP->User:recipeItemMapper.mapList(recipeItemDTOS)
-User-->RP:List<RecipeItem> recipes
-RP->SP:recipeItemAdapter.updateData(recipes)
-SP-->RP:updates view
+    activate DTOMapper
+    DTOMapper -> DTOMapper: recipeItemMapper.mapList(recipeItemDTOS)
+    DTOMapper-->GalleryViewModel:recipes
+deactivate DTOMapper
 end
-RP-->US:shows recipies
-
-
+GalleryViewModel -> GalleryViewModel: postValue(recipes)
+deactivate GalleryViewModel
+GalleryViewModel -> GalleryFragment: observe getRecipeItemsLiveData()
+activate GalleryFragment
+GalleryFragment -> RecipeItemAdapter: updateData(recipes)
+activate RecipeItemAdapter
+RecipeItemAdapter -> GalleryFragment: updated data
+deactivate RecipeItemAdapter
+GalleryFragment -> GalleryFragment: display recipe items in RecyclerView
+GalleryFragment --> Fragment: Update UI with Data
+deactivate GalleryFragment
+Fragment --> User: Display Updated UI
 @enduml

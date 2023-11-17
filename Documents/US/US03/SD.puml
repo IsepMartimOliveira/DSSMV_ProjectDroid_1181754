@@ -1,43 +1,45 @@
 @startuml
-autoactivate on
-autonumber
-title As a User i want to see  the different ingredients
-autonumber
-actor "User" as US
-participant GalleryFragment as RP
-participant HttpClients as HTTP
-participant "Converter" as CV
+actor User as User
+participant "GalleryFragment" as GalleryFragment
+participant "GalleryViewModel" as GalleryViewModel
+participant "HttpClient" as HttpClient
+database "Spoonacular API" as Server
+participant "Convert" as Convert
+participant "DTOMapper" as DTOMapper
+participant "IngredientItemAdapter" as IngredientItemAdapter
 
-participant "RecipeDTO" as  DTO
-participant "RecipeItemDTO" as DTO2
-
-participant DTOMapper as Mapper
-
-participant "RecipeItem" as User
-participant IngridientItemAdapter as SP
-
-US->RP:Selects recepie
-RP-->US:checks if the data isn´t null
-
-US->RP:onQuestionMarkClick(Integer id,String title)
-
-RP->HTTP:getRequest(url,callback)
-alt postRequest == successful
-HTTP-->RP:response
-RP->RP:jsonResponse = response.body().string();
-RP->CV:convertFromJson(jsonResponse,RecepieInformationDTO.class)
-CV->DTO:convert to RecepieDTO
-DTO-->RP:recepieInformationDTO
-RP->DTO2:recepieInformationDTO.getExtendedIngredients()
-DTO2-->RP: List<ExtendedIngridientsDTO> extendedIngridientsDTOS
-RP->Mapper: DTOMapper<ExtendedIngridientsDTO, Ingredients>
-Mapper-->RP:ingredientMapper
-RP->User:ingredientMapper.mapList(extendedIngridientsDTOS)
-User-->RP: List<Ingredients> ingredients
-RP->SP:showIngredientsAlertDialog(ingredients)
-SP-->RP:updates view
+User -> GalleryFragment: Click on a recipe item (Question Mark)
+GalleryFragment -> GalleryViewModel: onQuestionMarkClick(id, title)
+activate GalleryViewModel
+GalleryViewModel -> HttpClient: getRequest(url, callback)
+activate HttpClient
+HttpClient -> Server: GET request for ingredients
+activate Server
+Server --> HttpClient: response
+deactivate Server
+HttpClient --> GalleryViewModel: receive response
+deactivate HttpClient
+GalleryViewModel -> Convert: convertFromJson(jsonResponse, RecepieInformationDTO.class)
+activate Convert
+Convert --> GalleryViewModel: recepieInformationDTO
+deactivate Convert
+alt if  recepieInformationDTO.getExtendedIngredients() != null && !recepieInformationDTO.getExtendedIngredients().isEmpty()
+GalleryViewModel->GalleryViewModel:  List<ExtendedIngridientsDTO> extendedIngridientsDTOS
+GalleryViewModel -> DTOMapper: DTOMapper(ExtendedIngridientsDTO -> Ingredients)
+activate DTOMapper
+DTOMapper -> DTOMapper: mapList(extendedIngridientsDTOS)\n(ExtendedIngridientsDTO -> Ingredients)
+DTOMapper -> GalleryViewModel: ingredients
 end
-RP-->US:shows ingridients
-
-
+deactivate DTOMapper
+GalleryViewModel -> GalleryViewModel: postValue(ingredients)
+deactivate GalleryViewModel
+GalleryViewModel -> GalleryFragment: observe getIngredientsLiveData()
+activate GalleryFragment
+GalleryFragment -> IngredientItemAdapter: updateData(ingredients)
+activate IngredientItemAdapter
+IngredientItemAdapter -> GalleryFragment: updated data
+deactivate IngredientItemAdapter
+GalleryFragment -> GalleryFragment: showIngredientsAlertDialog(ingredients)
+GalleryFragment -> User: Display ingredients
+deactivate GalleryFragment
 @enduml

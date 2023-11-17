@@ -30,13 +30,14 @@ deactivate Convert
 
 SlideshowViewModel -> SlideshowViewModel: process cartItemResponseDTO\nand check aisles
 alt cartItemResponseDTO.getAisles() not empty then
-  SlideshowViewModel -> SlideshowViewModel: extract ShoppingInfoDTOs from aisles
-  SlideshowViewModel -> DTOMapper: create DTOMapper(ShoppingInfoDTO -> CartItem)
+  SlideshowViewModel -> SlideshowViewModel: extract ShoppingInfoDTO from aisles
+  SlideshowViewModel->SlideshowViewModel: create a List<ShoppingInfoDTO> shoppingInfoDTOs
+  SlideshowViewModel -> DTOMapper:  DTOMapper(ShoppingInfoDTO -> CartItem)
   activate DTOMapper
-  DTOMapper -> DTOMapper: mapList(shoppingInfoDTOs)\n(ShoppingInfoDTO -> CartItem)
-  DTOMapper -> SlideshowViewModel: update cartItems list
+  DTOMapper -> DTOMapper: mapList(shoppingInfoDTOs)
+  DTOMapper -> SlideshowViewModel: cartItems
   deactivate DTOMapper
-
+SlideshowViewModel->SlideshowViewModel:cartItemsLiveData.postValue(cartItems)
 end if
 deactivate SlideshowViewModel
 

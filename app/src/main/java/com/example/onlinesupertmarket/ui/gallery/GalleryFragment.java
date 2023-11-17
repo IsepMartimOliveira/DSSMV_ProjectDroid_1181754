@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,6 +27,7 @@ import com.example.onlinesupertmarket.Model.ShoppingCart;
 import com.example.onlinesupertmarket.Network.HttpClient;
 import com.example.onlinesupertmarket.R;
 import com.example.onlinesupertmarket.databinding.FragmentGalleryBinding;
+import com.example.onlinesupertmarket.ui.slideshow.SlideshowViewModel;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -38,38 +40,34 @@ import java.util.List;
 import static com.example.onlinesupertmarket.Network.Utils.*;
 
 public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQuestionMarkClickListener,IngredientItemAdapter.OnAddMarkClickListener {
+    private GalleryViewModel galleryViewModel;
     private String username;
     private String hash;
     private String selectedRecipeTitle;
-
     private FragmentGalleryBinding binding;
-    Spinner spinner;
-
-    Spinner spinner_intollerances;
-    Spinner spinner_type;
+    Spinner spinner, spinner_type,spinner_intollerances;
     Button button;
-    String selectedCuisine="";
-    String selectedIntollerance="";
-    String selectedType="";
-
+    String selectedCuisine="",selectedIntollerance="",selectedType="";
     private RecyclerView recyclerView,recyclerView2;
     private RecipeItemAdapter recipeItemAdapter;
-
     private  IngredientItemAdapter  ingredientAdapter;
     private LinearLayout moreOptionsLayout;
-
     private  ImageView hideenLinearLayout;
-    private int successfulAdditions = 0;
+    private AlertDialog successAlertDialog,dialog;
 
 
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        GalleryViewModel galleryViewModel =
-                new ViewModelProvider(this).get(GalleryViewModel.class);
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        galleryViewModel = new ViewModelProvider(this).get(GalleryViewModel.class);
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
         username = sharedPreferences.getString("username", "");
         hash = sharedPreferences.getString("hash", "");
+    }
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+
         binding = FragmentGalleryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -107,6 +105,32 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
 
             }
         });
+        //LiveData
+        galleryViewModel.getRecipeItemsLiveData().observe(getViewLifecycleOwner(), recipeItems ->  {
+                recipeItemAdapter.updateData(recipeItems);
+
+        });
+
+        galleryViewModel.getErrorLiveData().observe(getViewLifecycleOwner(), errorMessage -> {
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
+        });
+        galleryViewModel.getIngredientsLiveData().observe(getViewLifecycleOwner(), ingredients -> {
+            if (ingredients != null && !ingredients.isEmpty()) {
+                showIngredientsAlertDialog(ingredients);
+            } else {
+                Toast.makeText(getActivity(), "No ingredients found.", Toast.LENGTH_SHORT).show();
+            }
+        });
+        galleryViewModel.getSuccessfulAdditionLiveData().observe(getViewLifecycleOwner(), success -> {
+            if (success != null) {
+                if (success) {
+                    showSuccessAlertDialog();
+                } else {
+                    Toast.makeText(getActivity(), "Failed to add ingredient to basket", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,7 +148,7 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
                     url += "&type=" + selectedType;
                 }
 
-                getRecepie(url);
+                galleryViewModel.getRecipe(url);
 
 
             }
@@ -155,7 +179,6 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                // Get the selected item as a String
                selectedCuisine = parentView.getItemAtPosition(position).toString();
 
 
@@ -163,7 +186,6 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // Handle the case when nothing is selected
             }
         });
         return root;
@@ -171,155 +193,11 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
 
     }
 
-
-
-
-    public void getRecepie(String urlApi) {
-        HttpClient.getRequest(urlApi, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    try {
-                        String jsonResponse = response.body().string();
-                        Log.d("API Response", jsonResponse);
-
-                        RecipeDTO recipeDTO = Convert.convertFromJson(jsonResponse, RecipeDTO.class);
-
-                        if (recipeDTO.getResults() != null && !recipeDTO.getResults().isEmpty()) {
-                            List<RecipeItemDTO> recipeItemDTOS = recipeDTO.getResults();
-
-                            DTOMapper<RecipeItemDTO, RecipeItem> recipeItemMapper = new DTOMapper<>(dto -> {
-                                RecipeItem recipeItem = new RecipeItem(dto.getId(), dto.getTitle(), dto.getImage());
-                                recipeItem.setId(dto.getId());
-                                recipeItem.setTitle(dto.getTitle());
-                                recipeItem.setImage(dto.getImage());
-                                return recipeItem;
-                            });
-                            List<RecipeItem> recipes = recipeItemMapper.mapList(recipeItemDTOS);
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    recipeItemAdapter.updateData(recipes);
-                                }
-                            });
-                        } else {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getActivity(), "No recipes found.", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    // Handle the response when it's not successful
-                }
-            }
-        });
-    }
-
-
-
-
-
-
-
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
-    @Override
-    public void onQuestionMarkClick(Integer id,String title) {
+    public void onQuestionMarkClick(Integer id, String title) {
         selectedRecipeTitle = title;
-        String url = apiUrl +recipeURL+id+information + api_key +includeNutrition;
-        getIngridients(url);
-    }
-
-
-
-
-    private void sendIngredientToBasket(String ingredientName,final int totalIngredients) {
-        String shoppingUrl=apiUrl+mealPlaner+username+shoopingList+api_key+hashURL+hash;
-        ShoppingCart shoppingCart = new ShoppingCart(ingredientName);
-        String ingredientJson = Convert.convertToJson(shoppingCart);
-        successfulAdditions++;
-        HttpClient.postRequest(shoppingUrl, ingredientJson, new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                final String responseBody = response.body().string();
-                if (response.isSuccessful()) {
-
-                    if (successfulAdditions == totalIngredients) {
-                        showSuccessAlertDialog();
-                        successfulAdditions=0;
-                    }
-                }
-
-            }
-        });
-    }
-
-    public void getIngridients(String url) {
-        HttpClient.getRequest(url, new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    try {
-                        String jsonResponse = response.body().string();
-                        Log.d("API Response", jsonResponse);
-
-                        RecepieInformationDTO recepieInformationDTO = Convert.convertFromJson(jsonResponse, RecepieInformationDTO.class);
-
-                        if (recepieInformationDTO != null && recepieInformationDTO.getExtendedIngredients() != null && !recepieInformationDTO.getExtendedIngredients().isEmpty()) {
-                            List<ExtendedIngridientsDTO> extendedIngridientsDTOS = recepieInformationDTO.getExtendedIngredients();
-
-                            DTOMapper<ExtendedIngridientsDTO, Ingredients> ingredientMapper = new DTOMapper<>(dto -> new Ingredients(dto.getName(),dto.getImage()));
-                            List<Ingredients> ingredients = ingredientMapper.mapList(extendedIngridientsDTOS);
-                            Log.d("Ingredients List Size", String.valueOf(ingredients.size()));
-
-
-
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    showIngredientsAlertDialog(ingredients);
-                                }
-                            });
-                        } else {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getActivity(), "No ingredients found.", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    // Handle the response when it's not successful
-                }
-            }
-        });
+        String url = apiUrl + recipeURL + id + information + api_key + includeNutrition;
+        galleryViewModel.getIngredients(url);
     }
 
     private void showIngredientsAlertDialog(List<Ingredients> ingredients) {
@@ -332,8 +210,6 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
         recyclerView2.setAdapter(ingredientAdapter);
 
         ingredientAdapter.updateData(ingredients);
-
-
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setView(alertDialogView);
         builder.setTitle("Ingredients for " + selectedRecipeTitle);
@@ -348,19 +224,16 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
                 List<Ingredients> ingredients = ingredientAdapter.getIngredientList();
 
                 if (ingredients != null && !ingredients.isEmpty()) {
-
                     for (Ingredients ingredient : ingredients) {
                         String ingredientName = ingredient.getName();
-
-                        sendIngredientToBasket(ingredientName,ingredients.size());
+                        galleryViewModel.sendIngredientToBasket(ingredientName, ingredients.size(),username,hash);
                     }
                 }
             }
-
         });
 
         // Show the AlertDialog
-        AlertDialog dialog = builder.create();
+        dialog = builder.create();
         dialog.show();
     }
 
@@ -384,7 +257,8 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
                         dialog.dismiss();
                     }
                 });
-                builder.create().show();
+                successAlertDialog=builder.create();
+                successAlertDialog.show();
             }
         });
     }
@@ -393,6 +267,33 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
 
     @Override
     public void onAddMarkClick(String title) {
-        sendIngredientToBasket(title,1);
+        galleryViewModel.sendIngredientToBasket(title,1,username,hash);
     }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        releaseViewReferences();
+        unregisterEventListeners();
+        dismissAlertDialog();
+        galleryViewModel = null;
+        binding = null;
+    }
+    private void releaseViewReferences() {
+        recyclerView = null;
+        recyclerView2 = null;
+    }
+    private void unregisterEventListeners() {
+        button.setOnClickListener(null);
+        hideenLinearLayout.setOnClickListener(null);
+    }
+    private void dismissAlertDialog(){
+        if (successAlertDialog != null && successAlertDialog.isShowing()) {
+            successAlertDialog.dismiss();
+        }
+        if(dialog != null && dialog.isShowing()){
+            dialog.dismiss();
+        }
+    }
+
+
 }
