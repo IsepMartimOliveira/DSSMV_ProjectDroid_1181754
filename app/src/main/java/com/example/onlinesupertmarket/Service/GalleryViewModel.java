@@ -4,15 +4,11 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import com.example.onlinesupertmarket.DTO.ExtendedIngridientsDTO;
-import com.example.onlinesupertmarket.DTO.RecepieInformationDTO;
-import com.example.onlinesupertmarket.DTO.RecipeDTO;
-import com.example.onlinesupertmarket.DTO.RecipeItemDTO;
+import com.example.onlinesupertmarket.DTO.*;
 import com.example.onlinesupertmarket.Mapper.Convert;
 import com.example.onlinesupertmarket.Mapper.DTOMapper;
 import com.example.onlinesupertmarket.Model.Ingredients;
 import com.example.onlinesupertmarket.Model.RecipeItem;
-import com.example.onlinesupertmarket.Model.ShoppingCart;
 import com.example.onlinesupertmarket.Network.HttpClient;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -125,7 +121,7 @@ public class GalleryViewModel extends ViewModel {
     }
     public void sendIngredientToBasket(String ingredientName, final int totalIngredients,String username,String hash) {
         String shoppingUrl = apiUrl + mealPlaner + username + shoopingList + api_key + hashURL + hash;
-        ShoppingCart shoppingCart = new ShoppingCart(ingredientName);
+        ShoppingCartRequest shoppingCart = new ShoppingCartRequest(ingredientName);
         String ingredientJson = Convert.convertToJson(shoppingCart);
 
         HttpClient.postRequest(shoppingUrl, ingredientJson, new Callback() {

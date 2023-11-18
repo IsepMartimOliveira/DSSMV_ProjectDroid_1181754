@@ -1,0 +1,43 @@
+@startuml
+title "As User, I want to get trivia by shaking the screen"
+
+actor User as User
+participant "HomeFragment" as SlideshowFragment
+participant "HomeViewModel" as SlideshowViewModel
+participant "HttpClient" as HttpClient
+database "Spoonacular API" as Server
+participant "Convert" as CV
+participant "DTOMapper" as Mapper
+
+User -> SlideshowFragment: shakes screen
+activate SlideshowFragment
+SlideshowFragment->SlideshowViewModel:Live Data
+SlideshowFragment -> SlideshowViewModel: getTrivia()
+activate SlideshowViewModel
+
+SlideshowViewModel -> HttpClient: getRequest(url, callback)
+activate HttpClient
+
+activate Server
+HttpClient->Server:GET request
+Server-->HttpClient:response
+deactivate Server
+HttpClient --> SlideshowViewModel: response
+deactivate HttpClient
+alt if response is successful
+SlideshowViewModel->CV:Convert.convertFromJson(responseBody, FoodTriviaDTO.class
+CV-->SlideshowViewModel:foodTriviaDTO
+SlideshowViewModel->Mapper: DTOMapper<FoodTriviaDTO, FoodTrivia> foodTriviaDTOMapper
+activate Mapper
+Mapper->Mapper:foodTriviaDTOMapper.map(foodTriviaDTO)
+Mapper-->SlideshowViewModel:foodTrivia
+SlideshowViewModel->SlideshowViewModel:postValue(foodTrivia)
+deactivate Mapper
+end
+
+
+SlideshowViewModel -> SlideshowFragment: getTriviaLiveData.observe()
+SlideshowFragment->User:display trivia
+deactivate SlideshowViewModel
+
+@enduml

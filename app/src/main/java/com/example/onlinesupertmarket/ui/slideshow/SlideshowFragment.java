@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.onlinesupertmarket.Decoration.ItemSpacingDecoration;
+import com.example.onlinesupertmarket.Others.ItemSpacingDecoration;
 import com.example.onlinesupertmarket.Adapter.ShoopingItemAdapter;
 import com.example.onlinesupertmarket.MenuPageNavActivity;
 import com.example.onlinesupertmarket.Model.CartItem;

@@ -18,8 +18,9 @@ public class Utils {
     public static String shoopingList2="/shopping-list";
     public static String hashURL="&hash=";
     public static  String includeNutrition="&includeNutrition=true";
-     public static String searchIngredient="recipes/queries/analyze";
+     public static String foodTrivia="food/trivia/random";
 
+//https://api.spoonacular.com/
 
 
     public static String capitalizeFirstLetter(String text) {

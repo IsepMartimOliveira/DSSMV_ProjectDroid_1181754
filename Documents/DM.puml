@@ -19,22 +19,20 @@ Image
 Price
 }
 
-
-class ShoopingCart{
-Item
-
+class FoodTrivia{
+text
 }
+
 
 class CartItem{
 Id
 Name
 Cost
 }
-
+User"1"--"1"FoodTrivia:can acess
 User"1"--"1..*" CartItem:can access >
 User "1" -- "1..*" RecipeItem: can access >
-RecipeItem"1"--left"1..*"Ingredients:has >
-CartItem"1..*" --"1" ShoopingCart   :shows <
-Ingredients"1..*" -- "1" ShoopingCart: added to >
+RecipeItem"1"--"1..*"Ingredients:has >
+Ingredients"1..*" --right "1" CartItem: added to >
 
 @enduml

@@ -1,0 +1,18 @@
+@startuml
+actor User as MD
+title As a User I want to add all ingredients to the Shopping cart
+activate MD
+
+MD -> ":System" : User shakes the screen
+activate ":System"
+
+alt Successful case - Data is accepted
+    ":System" --> ":System" : Data is processed
+    ":System" --> MD : Shows the trivia
+else Failure case - Data is not accepted
+    ":System" --> MD : Shows error message
+end
+
+deactivate ":System"
+deactivate MD
+@enduml

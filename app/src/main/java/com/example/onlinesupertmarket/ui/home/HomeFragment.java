@@ -1,5 +1,8 @@
 package com.example.onlinesupertmarket.ui.home;
 
+import android.app.Application;
+import android.content.Context;
+import com.example.onlinesupertmarket.Others.ShakeDetector;
 import com.example.onlinesupertmarket.Service.HomeViewModel;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,21 +16,30 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.onlinesupertmarket.MenuPageNavActivity;
 import com.example.onlinesupertmarket.R;
 import com.example.onlinesupertmarket.databinding.FragmentHomeBinding;
+import com.google.android.material.snackbar.Snackbar;
 
 public class HomeFragment extends Fragment {
+    private ShakeDetector shakeDetector;
 
     private FragmentHomeBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        Context context = requireActivity().getApplicationContext();
+        shakeDetector = new ShakeDetector(context);
 
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         ImageView recepieImageView = root.findViewById(R.id.recepie);
         ImageView shoopCart=root.findViewById(R.id.shoop);
-
+        shakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+            @Override
+            public void onShake() {
+                homeViewModel.getTrivia();
+            }
+        });
         recepieImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,13 +64,30 @@ public class HomeFragment extends Fragment {
 
         }
     });
+        homeViewModel.getTriviaLiveData().observe(getViewLifecycleOwner(), foodTrivia -> {
+            if (foodTrivia != null) {
+                Snackbar.make(requireView(), "Trivia: " + foodTrivia.getText(), Snackbar.LENGTH_LONG).show();
+            }
+
+        });
 
         return root;
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        shakeDetector.registerListener();
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        shakeDetector.unregisterListener();
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+
 }

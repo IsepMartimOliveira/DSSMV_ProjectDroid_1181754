@@ -9,13 +9,13 @@ rectangle "Account" {
 }
 
 rectangle "Recipe"{
-User --> (Choose a recipe)
-User -->(Show ingredient off a recipe)
+User --> (Show  recipes)
+User -->(Show ingredients off a recipe)
 }
 
 rectangle "Shopping List" {
 
-    User -->(Add a ingredient to the shopping list)
+    User -->(Add an ingredient to the shopping list)
     User -->(Add all ingredients to the shopping list)
 
     User -->(Show the shopping list )
@@ -23,6 +23,9 @@ rectangle "Shopping List" {
     User -->(Remove all items from the shopping list)
 
 }
+
+rectangle "Trivia"{
+User-->(Shake the screen and show a trivia)
 }
 
 @enduml

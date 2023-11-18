@@ -28,9 +28,8 @@ ShoppingAdapter -> SlideshowFragment: remove all items
 deactivate ShoppingAdapter
 
 SlideshowFragment -> SlideshowFragment: updateTotalCostView(calculateTotalCost(cartItems))
-SlideshowFragment --> Fragment: Update UI with Data
+SlideshowFragment --> User: Update UI with Data and display it
 
 deactivate SlideshowFragment
-Fragment-->User:Shows updated UI
-deactivate Fragment
+
 @enduml

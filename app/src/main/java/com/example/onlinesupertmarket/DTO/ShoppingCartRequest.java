@@ -1,9 +1,9 @@
-package com.example.onlinesupertmarket.Model;
+package com.example.onlinesupertmarket.DTO;
 
-public class ShoppingCart {
+public class ShoppingCartRequest {
     private String item;
 
-    public ShoppingCart(String item) {
+    public ShoppingCartRequest(String item) {
         this.item = item;
     }
 

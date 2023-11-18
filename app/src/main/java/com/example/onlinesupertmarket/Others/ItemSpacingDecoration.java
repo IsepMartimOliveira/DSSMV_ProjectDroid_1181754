@@ -1,4 +1,4 @@
-package com.example.onlinesupertmarket.Decoration;
+package com.example.onlinesupertmarket.Others;
 
 import android.graphics.Rect;
 import android.view.View;
