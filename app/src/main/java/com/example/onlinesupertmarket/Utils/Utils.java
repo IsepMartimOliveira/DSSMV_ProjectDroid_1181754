@@ -1,4 +1,4 @@
-package com.example.onlinesupertmarket.Network;
+package com.example.onlinesupertmarket.Utils;
 
 public class Utils {
     public static String apiUrl="https://api.spoonacular.com/";

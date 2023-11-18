@@ -1,5 +1,6 @@
 package com.example.onlinesupertmarket.ui.slideshow;
 
+import com.example.onlinesupertmarket.Service.SlideshowViewModel;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;

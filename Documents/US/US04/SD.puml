@@ -1,15 +1,16 @@
 @startuml
+title As a User I want to add all ingredients from a recipe
 actor User as User
 participant "GalleryFragment" as GalleryFragment
 participant "GalleryViewModel" as GalleryViewModel
+participant "ShoppingCart" as ShoppingCart
 participant "HttpClient" as HttpClient
 database "Spoonacular API" as Server
 participant "Convert" as Convert
-participant "ShoppingCart" as ShoppingCart
 
 User -> GalleryFragment: click add all
 GalleryFragment -> GalleryViewModel: sendIngredientToBasket( ingredientName,totalIngredients,username,hash)
-GalleryViewModel->ShoppingCart:ShoppingCart(ingredient)
+GalleryViewModel->ShoppingCart:ShoppingCart(ingredientName)
 ShoppingCart-->GalleryViewModel: shoppingCart
 GalleryViewModel->Convert:Convert.convertToJson(shoppingCart)
 Convert-->GalleryViewModel:ingredientJson

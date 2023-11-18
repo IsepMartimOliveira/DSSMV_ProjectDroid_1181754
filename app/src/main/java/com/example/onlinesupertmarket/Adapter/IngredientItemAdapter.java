@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.onlinesupertmarket.Model.Ingredients;
-import com.example.onlinesupertmarket.Network.Utils;
+import com.example.onlinesupertmarket.Utils.Utils;
 import com.example.onlinesupertmarket.R;
 import com.squareup.picasso.Picasso;
 

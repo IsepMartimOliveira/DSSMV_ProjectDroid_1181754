@@ -1,4 +1,6 @@
 @startuml
+title As a User I want to see the different ingredients
+
 actor User as User
 participant "GalleryFragment" as GalleryFragment
 participant "GalleryViewModel" as GalleryViewModel
@@ -25,9 +27,9 @@ Convert --> GalleryViewModel: recepieInformationDTO
 deactivate Convert
 alt if  recepieInformationDTO.getExtendedIngredients() != null && !recepieInformationDTO.getExtendedIngredients().isEmpty()
 GalleryViewModel->GalleryViewModel:  List<ExtendedIngridientsDTO> extendedIngridientsDTOS
-GalleryViewModel -> DTOMapper: DTOMapper(ExtendedIngridientsDTO -> Ingredients)
+GalleryViewModel -> DTOMapper: DTOMapper(ExtendedIngridientsDTO -> Ingredients) ingredientMapper
 activate DTOMapper
-DTOMapper -> DTOMapper: mapList(extendedIngridientsDTOS)\n(ExtendedIngridientsDTO -> Ingredients)
+DTOMapper -> DTOMapper:  ingredientMapper.mapList(extendedIngridientsDTOS)
 DTOMapper -> GalleryViewModel: ingredients
 end
 deactivate DTOMapper

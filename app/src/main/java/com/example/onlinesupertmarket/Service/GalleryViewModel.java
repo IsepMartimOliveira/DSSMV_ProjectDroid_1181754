@@ -1,4 +1,4 @@
-package com.example.onlinesupertmarket.ui.gallery;
+package com.example.onlinesupertmarket.Service;
 
 import android.util.Log;
 import androidx.lifecycle.LiveData;
@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.onlinesupertmarket.Network.Utils.*;
+import static com.example.onlinesupertmarket.Utils.Utils.*;
 
 public class GalleryViewModel extends ViewModel {
     private int successfulAdditions = 0;

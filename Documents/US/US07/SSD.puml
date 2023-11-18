@@ -1,13 +1,13 @@
 @startuml
 actor User as MD
-title As a User I want to add all ingredients to the Shopping cart
+title As a User I want to delete a ingridient
 activate MD
 
 MD -> ":System" : User goes to ShoppingCart
 activate ":System"
 
 alt Successful case - Data is accepted
-    ":System" --> ":System" : DELETE request
+
     ":System" --> ":System" : Data is processed
     ":System" --> MD : Deletes the  ingredient
 else Failure case - Data is not accepted

@@ -1,15 +1,13 @@
 @startuml
+title As User i want to delete all items
 actor User as User
-participant "Android Fragment" as Fragment
 participant "SlideshowFragment" as SlideshowFragment
 participant "SlideshowViewModel" as SlideshowViewModel
 participant "ShoppingAdapter" as ShoppingAdapter
 
 
-User -> Fragment: Start
-activate Fragment
 
-Fragment -> SlideshowFragment: onCreate
+User -> SlideshowFragment: presses delete all button
 activate SlideshowFragment
 
 SlideshowFragment -> SlideshowViewModel: deleteAllItems(username, hash)

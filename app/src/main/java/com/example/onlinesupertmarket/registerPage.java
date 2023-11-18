@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-import static com.example.onlinesupertmarket.Network.Utils.*;
+import static com.example.onlinesupertmarket.Utils.Utils.*;
 
 
 public class registerPage extends AppCompatActivity {

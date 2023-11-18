@@ -9,8 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.onlinesupertmarket.Model.CartItem;
-import com.example.onlinesupertmarket.Model.RecipeItem;
-import com.example.onlinesupertmarket.Network.Utils;
+import com.example.onlinesupertmarket.Utils.Utils;
 import com.example.onlinesupertmarket.R;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,6 +1,6 @@
 @startuml
 actor User as User
-participant "Android Fragment" as Fragment
+title As a User I want to see the different recipes
 
 participant "GalleryFragment" as GalleryFragment
 participant "GalleryViewModel" as GalleryViewModel
@@ -9,9 +9,9 @@ database "Spoonacular API" as Server
 participant "Convert" as Convert
 participant "DTOMapper" as DTOMapper
 participant "RecipeItemAdapter" as RecipeItemAdapter
-User->Fragment:start
-Note left of Fragment: SharedPreferences\n(username, hash)
-Fragment->GalleryFragment: onCreate
+User->GalleryFragment:Click on button
+Note left of GalleryFragment: SharedPreferences\n(username, hash)
+
 GalleryFragment -> GalleryViewModel: observe LiveData
 GalleryFragment -> GalleryViewModel: getRecipe(url)
 activate GalleryViewModel
@@ -32,7 +32,7 @@ alt recipeDTO.getResults() not empty then
     GalleryViewModel -> GalleryViewModel: extract RecipeItemDTO
     GalleryViewModel -> GalleryViewModel: create a List<RecepiItemDTO> recipeItemDTOS
 
-    GalleryViewModel -> DTOMapper:DTOMapper(RecipeItemDTO -> RecipeItem)
+    GalleryViewModel -> DTOMapper:DTOMapper(RecipeItemDTO -> RecipeItem) recipeItemMapper
 
     activate DTOMapper
     DTOMapper -> DTOMapper: recipeItemMapper.mapList(recipeItemDTOS)
@@ -48,7 +48,6 @@ activate RecipeItemAdapter
 RecipeItemAdapter -> GalleryFragment: updated data
 deactivate RecipeItemAdapter
 GalleryFragment -> GalleryFragment: display recipe items in RecyclerView
-GalleryFragment --> Fragment: Update UI with Data
+GalleryFragment --> User: Update UI with Data and display it
 deactivate GalleryFragment
-Fragment --> User: Display Updated UI
 @enduml

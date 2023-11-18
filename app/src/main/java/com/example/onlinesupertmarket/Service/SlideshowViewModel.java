@@ -1,4 +1,4 @@
-package com.example.onlinesupertmarket.ui.slideshow;
+package com.example.onlinesupertmarket.Service;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -18,9 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.example.onlinesupertmarket.Network.Utils.*;
+import static com.example.onlinesupertmarket.Utils.Utils.*;
 
 public class SlideshowViewModel extends ViewModel {
 

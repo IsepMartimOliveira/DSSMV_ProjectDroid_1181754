@@ -1,6 +1,8 @@
 @startuml
+title As a User I want to display the added items
+
 actor User as User
-participant "Android Fragment" as Fragment
+
 participant "SlideshowFragment" as SlideshowFragment
 participant "SlideshowViewModel" as SlideshowViewModel
 participant "HttpClient" as HttpClient
@@ -8,9 +10,8 @@ database "Spoonacular API" as Server
 participant "Convert" as Convert
 participant "DTOMapper" as DTOMapper
 participant "ShoppingAdapter" as ShoppingAdapter
-User->Fragment:start
-Note left of Fragment: SharedPreferences\n(username, hash)
-Fragment->SlideshowFragment: onCreate
+Note left of SlideshowFragment: SharedPreferences\n(username, hash)
+User->SlideshowFragment: onCreate
 SlideshowFragment -> SlideshowViewModel: observe LiveData
 SlideshowFragment -> SlideshowViewModel: fetchShoppingCart(username, hash)
 activate SlideshowViewModel
@@ -32,9 +33,9 @@ SlideshowViewModel -> SlideshowViewModel: process cartItemResponseDTO\nand check
 alt cartItemResponseDTO.getAisles() not empty then
   SlideshowViewModel -> SlideshowViewModel: extract ShoppingInfoDTO from aisles
   SlideshowViewModel->SlideshowViewModel: create a List<ShoppingInfoDTO> shoppingInfoDTOs
-  SlideshowViewModel -> DTOMapper:  DTOMapper(ShoppingInfoDTO -> CartItem)
+  SlideshowViewModel -> DTOMapper:  DTOMapper(ShoppingInfoDTO -> CartItem)shoppingInfoToCartItemDTOMapper
   activate DTOMapper
-  DTOMapper -> DTOMapper: mapList(shoppingInfoDTOs)
+  DTOMapper -> DTOMapper: shoppingInfoToCartItemDTOMapper.mapList(shoppingInfoDTOs)
   DTOMapper -> SlideshowViewModel: cartItems
   deactivate DTOMapper
 SlideshowViewModel->SlideshowViewModel:cartItemsLiveData.postValue(cartItems)
@@ -49,8 +50,7 @@ ShoppingAdapter -> SlideshowFragment: updated data
 deactivate ShoppingAdapter
 SlideshowFragment -> SlideshowFragment: calculateTotalCost(cartItems)
 SlideshowFragment -> SlideshowFragment: updateTotalCostView(totalCost)
-SlideshowFragment --> Fragment: Update UI with Data
+SlideshowFragment --> User: Update UI with Data and display it
 deactivate SlideShowFragment
-Fragment --> User: Display Updated UI
 
 @enduml

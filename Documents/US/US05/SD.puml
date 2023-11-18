@@ -1,11 +1,14 @@
 @startuml
 actor User as User
+title As a User I want to add a ingredient from a recipe
+
 participant "GalleryFragment" as GalleryFragment
 participant "GalleryViewModel" as GalleryViewModel
+participant "ShoppingCart" as ShoppingCart
+
 participant "HttpClient" as HttpClient
 database "Spoonacular API" as Server
 participant "Convert" as Convert
-participant "ShoppingCart" as ShoppingCart
 
 User -> GalleryFragment: onAddMarkClick(String title)
 GalleryFragment -> GalleryViewModel: sendIngredientToBasket(title,1,username,hash)

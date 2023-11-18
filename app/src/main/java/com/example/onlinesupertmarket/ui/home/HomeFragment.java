@@ -1,5 +1,6 @@
 package com.example.onlinesupertmarket.ui.home;
 
+import com.example.onlinesupertmarket.Service.HomeViewModel;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.onlinesupertmarket.MenuPageNavActivity;
 import com.example.onlinesupertmarket.R;
 import com.example.onlinesupertmarket.databinding.FragmentHomeBinding;
-import com.example.onlinesupertmarket.registerPage;
 
 public class HomeFragment extends Fragment {
 

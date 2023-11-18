@@ -4,7 +4,7 @@ actor "User" as MD
 title As a User i want to register a account
 
 activate MD
-MD -> ":System" : User types  required daya in the UI
+MD -> ":System" : User types  required data in the UI
 ":System" --> ":System" : Gets data from User
 ":System" --> ":System" : Validates data(can not be null)
 alt successful case - data is accepted

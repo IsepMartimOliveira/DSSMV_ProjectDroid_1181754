@@ -7,14 +7,12 @@ actor "User" as US
 participant registerPage as RP
 participant "UserRequest" as Request
 participant "Converter" as CV
-participant "UserDTO" as  DTO
 
 participant Utils as Utils
 participant HttpClients as HTTP
+database "SpoonAcular API" as Server
 participant DTOMapper as Mapper
 
-participant "User" as User
-participant SharedPreferences as SP
 
 US->RP:Inserts required data
 RP-->US:checks if the data isn´t null
@@ -26,14 +24,15 @@ CV-->RP:jsonBody
 RP->Utils:create URL from Utils
 Utils-->RP:postURL
 RP->HTTP:postRequest(postURL,jsonBody,callback)
+HTTP->Server:POST request
+Server-->HTTP:response
 alt postRequest == successful
 HTTP-->RP:responseBody
 RP->CV:convertFromJson(responseBody,UserDTO.class)
-CV->DTO:convert to UserDTO
-DTO-->RP:userResponse
-RP->Mapper:DTOMapper<UserDTO,User>
-Mapper->User:convert to User
-User-->RP:User user
+CV-->RP:userResponse
+RP->Mapper:DTOMapper<UserDTO,User> userDTOMapper
+Mapper->Mapper:userDTOMapper.map(userResponse)
+Mapper-->RP:User user
 RP->US:Account created with success
 end
 

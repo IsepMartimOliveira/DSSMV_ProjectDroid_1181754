@@ -1,6 +1,6 @@
 @startuml
+title As User i want to delete a item
 actor User as User
-participant "Android Fragment" as Fragment
 participant "SlideshowFragment" as SlideshowFragment
 participant "SlideshowViewModel" as SlideshowViewModel
 participant "HttpClient" as HttpClient
@@ -8,8 +8,7 @@ database "Spoonacular API" as Server
 participant "Convert" as Convert
 participant "DTOMapper" as DTOMapper
 participant "ShoppingAdapter" as ShoppingAdapter
-User->Fragment:start
-Fragment->SlideshowFragment: onCreate
+User->SlideshowFragment: presses delete button
 SlideshowFragment->SlideshowViewModel: observe LiveData
 SlideshowFragment -> SlideshowViewModel: deleteItem(username, hash, itemId)
 activate SlideshowViewModel
@@ -30,8 +29,7 @@ activate ShoppingAdapter
 ShoppingAdapter -> SlideshowFragment: remove item from data
 deactivate ShoppingAdapter
 SlideshowFragment -> SlideshowFragment: updateTotalCostView(calculateTotalCost(cartItems))
-SlideshowFragment --> Fragment: Update UI with Data
+SlideshowFragment --> User: Update UI with Data and display it
 deactivate SlideshowFragment
-Fragment --> User: Display Updated UI
 
 @enduml

@@ -1,10 +1,10 @@
 package com.example.onlinesupertmarket.ui.gallery;
 
+import com.example.onlinesupertmarket.Service.GalleryViewModel;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,26 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.onlinesupertmarket.Adapter.IngredientItemAdapter;
 import com.example.onlinesupertmarket.Adapter.RecipeItemAdapter;
-import com.example.onlinesupertmarket.DTO.*;
-import com.example.onlinesupertmarket.Mapper.Convert;
-import com.example.onlinesupertmarket.Mapper.DTOMapper;
 import com.example.onlinesupertmarket.Model.Ingredients;
-import com.example.onlinesupertmarket.Model.RecipeItem;
-import com.example.onlinesupertmarket.Model.ShoppingCart;
-import com.example.onlinesupertmarket.Network.HttpClient;
 import com.example.onlinesupertmarket.R;
 import com.example.onlinesupertmarket.databinding.FragmentGalleryBinding;
-import com.example.onlinesupertmarket.ui.slideshow.SlideshowViewModel;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.onlinesupertmarket.Network.Utils.*;
+import static com.example.onlinesupertmarket.Utils.Utils.*;
 
 public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQuestionMarkClickListener,IngredientItemAdapter.OnAddMarkClickListener {
     private GalleryViewModel galleryViewModel;
