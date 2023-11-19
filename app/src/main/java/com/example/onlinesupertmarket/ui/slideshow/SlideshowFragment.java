@@ -36,7 +36,6 @@ public class SlideshowFragment extends Fragment implements ShoopingItemAdapter.O
     private TextView displayTotal;
     private Button checkOut, continueShopping;
     private ImageView deleteAll;
-    private List<String> allItemIds = new ArrayList<>();
     private double totalCost = 0.0;
     private LinearLayout emptyView;
 
@@ -92,6 +91,7 @@ public class SlideshowFragment extends Fragment implements ShoopingItemAdapter.O
         });
 
         checkOut.setOnClickListener(view -> {
+            checkOutDialog();
         });
 
         deleteAll.setOnClickListener(view -> {
@@ -168,5 +168,20 @@ public class SlideshowFragment extends Fragment implements ShoopingItemAdapter.O
             updateTotalCostView(calculateTotalCost(shoopingItemAdapter.getData()));
         }
     }
+
+    private void checkOutDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        String totalMessage = "Your total is " + String.format("%.2f", totalCost) + " €";
+
+        builder.setMessage(totalMessage+"\n"+"Do you wish to end your shopping?");
+        builder.setPositiveButton("Yes", (dialog, which) -> {
+            slideshowViewModel.deleteAllItems(username,hash);
+
+        });
+        builder.setNegativeButton("No", (dialog, which) -> {
+        });
+        builder.show();
+    }
+
 
 }
