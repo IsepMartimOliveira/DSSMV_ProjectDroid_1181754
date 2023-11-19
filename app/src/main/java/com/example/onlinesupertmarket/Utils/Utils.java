@@ -20,7 +20,6 @@ public class Utils {
     public static  String includeNutrition="&includeNutrition=true";
      public static String foodTrivia="food/trivia/random";
 
-//https://api.spoonacular.com/
 
 
     public static String capitalizeFirstLetter(String text) {
