@@ -9,6 +9,7 @@ participant "ShoppingCartRequest" as ShoppingCart
 participant "HttpClient" as HttpClient
 database "Spoonacular API" as Server
 participant "Convert" as Convert
+Note left of GalleryFragment: SharedPreferences\n(username, hash)
 
 User -> GalleryFragment: onAddMarkClick(String title)
 GalleryFragment -> GalleryViewModel: sendIngredientToBasket(title,1,username,hash)

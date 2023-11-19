@@ -172,6 +172,7 @@ public class ShoppingListFragment extends Fragment implements ShoopingItemAdapte
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setMessage("Do you wish to end your shopping?");
         builder.setPositiveButton("Yes", (dialog, which) -> {
+            showProcessingMessage();
             shoppingListViewModel.deleteAllItems(username,hash);
 
         });
@@ -180,6 +181,14 @@ public class ShoppingListFragment extends Fragment implements ShoopingItemAdapte
         builder.show();
     }
 
-
+    private void showProcessingMessage() {
+        // Create another AlertDialog for the processing message
+        AlertDialog.Builder processingBuilder = new AlertDialog.Builder(requireContext());
+        processingBuilder.setMessage("Your products are being processed...");
+        processingBuilder.setPositiveButton("OK", (dialog, which) -> {
+            // Handle the OK button press if needed
+        });
+        processingBuilder.show();
+    }
 
 }
