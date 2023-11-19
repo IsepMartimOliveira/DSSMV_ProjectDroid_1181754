@@ -4,7 +4,7 @@ title As a User I want to add a ingredient from a recipe
 
 participant "RecipesFragment" as GalleryFragment
 participant "RecipesViewModel" as GalleryViewModel
-participant "ShoppingCart" as ShoppingCart
+participant "ShoppingCartRequest" as ShoppingCart
 
 participant "HttpClient" as HttpClient
 database "Spoonacular API" as Server
@@ -12,7 +12,7 @@ participant "Convert" as Convert
 
 User -> GalleryFragment: onAddMarkClick(String title)
 GalleryFragment -> GalleryViewModel: sendIngredientToBasket(title,1,username,hash)
-GalleryViewModel->ShoppingCart:ShoppingCart(ingredient)
+GalleryViewModel->ShoppingCart:ShoppingCartRequest(ingredient)
 ShoppingCart-->GalleryViewModel: shoppingCart
 GalleryViewModel->Convert:Convert.convertToJson(shoppingCart)
 Convert-->GalleryViewModel:ingredientJson

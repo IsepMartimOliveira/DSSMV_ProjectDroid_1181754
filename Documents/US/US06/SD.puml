@@ -43,7 +43,6 @@ end if
 deactivate SlideshowViewModel
 
 SlideshowViewModel -> SlideshowFragment: getCartItemsLiveData().observe()
-activate SlideshowFragment
 SlideshowFragment -> ShoppingAdapter: updateData(cartItems)
 activate ShoppingAdapter
 ShoppingAdapter -> SlideshowFragment: updated data
@@ -51,6 +50,5 @@ deactivate ShoppingAdapter
 SlideshowFragment -> SlideshowFragment: calculateTotalCost(cartItems)
 SlideshowFragment -> SlideshowFragment: updateTotalCostView(totalCost)
 SlideshowFragment --> User: Update UI with Data and display it
-deactivate SlideShowFragment
 
 @enduml
