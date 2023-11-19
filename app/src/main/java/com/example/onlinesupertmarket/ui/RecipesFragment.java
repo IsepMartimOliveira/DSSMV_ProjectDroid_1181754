@@ -1,6 +1,6 @@
-package com.example.onlinesupertmarket.ui.gallery;
+package com.example.onlinesupertmarket.ui;
 
-import com.example.onlinesupertmarket.Service.GalleryViewModel;
+import com.example.onlinesupertmarket.Service.RecipesViewModel;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -27,8 +27,8 @@ import java.util.List;
 
 import static com.example.onlinesupertmarket.Utils.Utils.*;
 
-public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQuestionMarkClickListener,IngredientItemAdapter.OnAddMarkClickListener {
-    private GalleryViewModel galleryViewModel;
+public class RecipesFragment extends Fragment implements RecipeItemAdapter.OnQuestionMarkClickListener,IngredientItemAdapter.OnAddMarkClickListener {
+    private RecipesViewModel recipesViewModel;
     private String username;
     private String hash;
     private String selectedRecipeTitle;
@@ -48,7 +48,7 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        galleryViewModel = new ViewModelProvider(this).get(GalleryViewModel.class);
+        recipesViewModel = new ViewModelProvider(this).get(RecipesViewModel.class);
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
         username = sharedPreferences.getString("username", "");
         hash = sharedPreferences.getString("hash", "");
@@ -94,22 +94,22 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
             }
         });
         //LiveData
-        galleryViewModel.getRecipeItemsLiveData().observe(getViewLifecycleOwner(), recipeItems ->  {
+        recipesViewModel.getRecipeItemsLiveData().observe(getViewLifecycleOwner(), recipeItems ->  {
                 recipeItemAdapter.updateData(recipeItems);
 
         });
 
-        galleryViewModel.getErrorLiveData().observe(getViewLifecycleOwner(), errorMessage -> {
+        recipesViewModel.getErrorLiveData().observe(getViewLifecycleOwner(), errorMessage -> {
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
         });
-        galleryViewModel.getIngredientsLiveData().observe(getViewLifecycleOwner(), ingredients -> {
+        recipesViewModel.getIngredientsLiveData().observe(getViewLifecycleOwner(), ingredients -> {
             if (ingredients != null && !ingredients.isEmpty()) {
                 showIngredientsAlertDialog(ingredients);
             } else {
                 Toast.makeText(getActivity(), "No ingredients found.", Toast.LENGTH_SHORT).show();
             }
         });
-        galleryViewModel.getSuccessfulAdditionLiveData().observe(getViewLifecycleOwner(), success -> {
+        recipesViewModel.getSuccessfulAdditionLiveData().observe(getViewLifecycleOwner(), success -> {
             if (success != null) {
                 if (success) {
                     showSuccessAlertDialog();
@@ -136,7 +136,7 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
                     url += "&type=" + selectedType;
                 }
 
-                galleryViewModel.getRecipe(url);
+                recipesViewModel.getRecipe(url);
 
 
             }
@@ -185,7 +185,7 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
     public void onQuestionMarkClick(Integer id, String title) {
         selectedRecipeTitle = title;
         String url = apiUrl + recipeURL + id + information + api_key + includeNutrition;
-        galleryViewModel.getIngredients(url);
+        recipesViewModel.getIngredients(url);
     }
 
     private void showIngredientsAlertDialog(List<Ingredients> ingredients) {
@@ -214,7 +214,7 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
                 if (ingredients != null && !ingredients.isEmpty()) {
                     for (Ingredients ingredient : ingredients) {
                         String ingredientName = ingredient.getName();
-                        galleryViewModel.sendIngredientToBasket(ingredientName, ingredients.size(),username,hash);
+                        recipesViewModel.sendIngredientToBasket(ingredientName, ingredients.size(),username,hash);
                     }
                 }
             }
@@ -255,7 +255,7 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
 
     @Override
     public void onAddMarkClick(String title) {
-        galleryViewModel.sendIngredientToBasket(title,1,username,hash);
+        recipesViewModel.sendIngredientToBasket(title,1,username,hash);
     }
     @Override
     public void onDestroyView() {
@@ -263,7 +263,7 @@ public class GalleryFragment extends Fragment implements RecipeItemAdapter.OnQue
         releaseViewReferences();
         unregisterEventListeners();
         dismissAlertDialog();
-        galleryViewModel = null;
+        recipesViewModel = null;
         binding = null;
     }
     private void releaseViewReferences() {

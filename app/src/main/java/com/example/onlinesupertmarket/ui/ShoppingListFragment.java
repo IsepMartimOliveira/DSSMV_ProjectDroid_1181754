@@ -1,6 +1,6 @@
-package com.example.onlinesupertmarket.ui.slideshow;
+package com.example.onlinesupertmarket.ui;
 
-import com.example.onlinesupertmarket.Service.SlideshowViewModel;
+import com.example.onlinesupertmarket.Service.ShoppingListViewModel;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.onlinesupertmarket.Others.ItemSpacingDecoration;
 import com.example.onlinesupertmarket.Adapter.ShoopingItemAdapter;
-import com.example.onlinesupertmarket.MenuPageNavActivity;
 import com.example.onlinesupertmarket.Model.CartItem;
 import com.example.onlinesupertmarket.R;
 import com.example.onlinesupertmarket.databinding.FragmentSlideshowBinding;
@@ -25,9 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SlideshowFragment extends Fragment implements ShoopingItemAdapter.OnDeleteMarkClickListener {
+public class ShoppingListFragment extends Fragment implements ShoopingItemAdapter.OnDeleteMarkClickListener {
 
-    private SlideshowViewModel slideshowViewModel;
+    private ShoppingListViewModel shoppingListViewModel;
     private String username;
     private String hash;
     private ShoopingItemAdapter shoopingItemAdapter;
@@ -42,7 +41,7 @@ public class SlideshowFragment extends Fragment implements ShoopingItemAdapter.O
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        slideshowViewModel = new ViewModelProvider(this).get(SlideshowViewModel.class);
+        shoppingListViewModel = new ViewModelProvider(this).get(ShoppingListViewModel.class);
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
         username = sharedPreferences.getString("username", "");
         hash = sharedPreferences.getString("hash", "");
@@ -67,20 +66,20 @@ public class SlideshowFragment extends Fragment implements ShoopingItemAdapter.O
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(shoopingItemAdapter);
 
-        slideshowViewModel.getCartItemsLiveData().observe(getViewLifecycleOwner(), cartItems -> {
+        shoppingListViewModel.getCartItemsLiveData().observe(getViewLifecycleOwner(), cartItems -> {
             shoopingItemAdapter.updateData(cartItems);
             totalCost = calculateTotalCost(cartItems);
             updateTotalCostView(totalCost);
         });
-        slideshowViewModel.getDeletedItemLiveData().observe(getViewLifecycleOwner(), deletedItemId -> {
+        shoppingListViewModel.getDeletedItemLiveData().observe(getViewLifecycleOwner(), deletedItemId -> {
             handleDeletedItem(deletedItemId);
         });
-        slideshowViewModel.getErrorLiveData().observe(getViewLifecycleOwner(), errorMessage -> {
+        shoppingListViewModel.getErrorLiveData().observe(getViewLifecycleOwner(), errorMessage -> {
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
         });
 
 
-        slideshowViewModel.fetchShoppingCart(username, hash);
+        shoppingListViewModel.fetchShoppingCart(username, hash);
 
         continueShopping.setOnClickListener(view -> {
             if (getActivity() instanceof MenuPageNavActivity) {
@@ -135,7 +134,7 @@ public class SlideshowFragment extends Fragment implements ShoopingItemAdapter.O
         builder.setTitle("Delete Item");
         builder.setMessage("Do you wish to delete the item?");
         builder.setPositiveButton("Delete", (dialog, which) -> {
-            slideshowViewModel.deleteItem(username, hash, itemToDeleteId);
+            shoppingListViewModel.deleteItem(username, hash, itemToDeleteId);
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> {
         });
@@ -147,7 +146,7 @@ public class SlideshowFragment extends Fragment implements ShoopingItemAdapter.O
         builder.setTitle("Delete All Items");
         builder.setMessage("Do you wish to delete all items?");
         builder.setPositiveButton("Delete", (dialog, which) -> {
-            slideshowViewModel.deleteAllItems(username, hash);
+            shoppingListViewModel.deleteAllItems(username, hash);
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> {
         });
@@ -175,7 +174,7 @@ public class SlideshowFragment extends Fragment implements ShoopingItemAdapter.O
 
         builder.setMessage(totalMessage+"\n"+"Do you wish to end your shopping?");
         builder.setPositiveButton("Yes", (dialog, which) -> {
-            slideshowViewModel.deleteAllItems(username,hash);
+            shoppingListViewModel.deleteAllItems(username,hash);
 
         });
         builder.setNegativeButton("No", (dialog, which) -> {

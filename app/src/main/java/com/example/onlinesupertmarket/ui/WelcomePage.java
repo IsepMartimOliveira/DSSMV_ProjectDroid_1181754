@@ -1,4 +1,4 @@
-package com.example.onlinesupertmarket;
+package com.example.onlinesupertmarket.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.example.onlinesupertmarket.R;
 
 public class WelcomePage extends AppCompatActivity {
     Button button;

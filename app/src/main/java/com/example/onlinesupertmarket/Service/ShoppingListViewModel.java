@@ -21,7 +21,7 @@ import java.util.List;
 
 import static com.example.onlinesupertmarket.Utils.Utils.*;
 
-public class SlideshowViewModel extends ViewModel {
+public class ShoppingListViewModel extends ViewModel {
 
     private final MutableLiveData<List<CartItem>> cartItemsLiveData = new MutableLiveData<>();
     private MutableLiveData<String> deletedItemLiveData = new MutableLiveData<>();

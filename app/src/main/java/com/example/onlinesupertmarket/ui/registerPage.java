@@ -1,4 +1,4 @@
-package com.example.onlinesupertmarket;
+package com.example.onlinesupertmarket.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +17,7 @@ import com.example.onlinesupertmarket.Mapper.Convert;
 import com.example.onlinesupertmarket.Mapper.DTOMapper;
 import com.example.onlinesupertmarket.Model.User;
 import com.example.onlinesupertmarket.Network.HttpClient;
+import com.example.onlinesupertmarket.R;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;

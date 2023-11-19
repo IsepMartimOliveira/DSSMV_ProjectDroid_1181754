@@ -1,6 +1,5 @@
-package com.example.onlinesupertmarket.ui.home;
+package com.example.onlinesupertmarket.ui;
 
-import android.app.Application;
 import android.content.Context;
 import com.example.onlinesupertmarket.Others.ShakeDetector;
 import com.example.onlinesupertmarket.Service.HomeViewModel;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import com.example.onlinesupertmarket.MenuPageNavActivity;
 import com.example.onlinesupertmarket.R;
 import com.example.onlinesupertmarket.databinding.FragmentHomeBinding;
 import com.google.android.material.snackbar.Snackbar;

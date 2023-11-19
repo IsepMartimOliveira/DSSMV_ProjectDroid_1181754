@@ -21,7 +21,7 @@ import java.util.List;
 
 import static com.example.onlinesupertmarket.Utils.Utils.*;
 
-public class GalleryViewModel extends ViewModel {
+public class RecipesViewModel extends ViewModel {
     private int successfulAdditions = 0;
 
     private MutableLiveData<List<RecipeItem>> recipeItemsLiveData = new MutableLiveData<>();

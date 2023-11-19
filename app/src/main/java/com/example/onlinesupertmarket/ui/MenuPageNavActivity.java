@@ -1,10 +1,11 @@
-package com.example.onlinesupertmarket;
+package com.example.onlinesupertmarket.ui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import com.example.onlinesupertmarket.R;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import androidx.navigation.NavController;
