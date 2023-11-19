@@ -1,8 +1,8 @@
 @startuml
 title As a User I want to add all ingredients from a recipe
 actor User as User
-participant "GalleryFragment" as GalleryFragment
-participant "GalleryViewModel" as GalleryViewModel
+participant "RecipesFragment" as GalleryFragment
+participant "RecipesViewModel" as GalleryViewModel
 participant "ShoppingCart" as ShoppingCart
 participant "HttpClient" as HttpClient
 database "Spoonacular API" as Server

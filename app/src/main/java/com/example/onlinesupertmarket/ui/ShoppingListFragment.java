@@ -170,9 +170,7 @@ public class ShoppingListFragment extends Fragment implements ShoopingItemAdapte
 
     private void checkOutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        String totalMessage = "Your total is " + String.format("%.2f", totalCost) + " €";
-
-        builder.setMessage(totalMessage+"\n"+"Do you wish to end your shopping?");
+        builder.setMessage("Do you wish to end your shopping?");
         builder.setPositiveButton("Yes", (dialog, which) -> {
             shoppingListViewModel.deleteAllItems(username,hash);
 
@@ -181,6 +179,7 @@ public class ShoppingListFragment extends Fragment implements ShoopingItemAdapte
         });
         builder.show();
     }
+
 
 
 }

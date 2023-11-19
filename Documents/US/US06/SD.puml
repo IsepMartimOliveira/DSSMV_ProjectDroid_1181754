@@ -3,8 +3,8 @@ title As a User I want to display the added items
 
 actor User as User
 
-participant "SlideshowFragment" as SlideshowFragment
-participant "SlideshowViewModel" as SlideshowViewModel
+participant "ShoppingListFragment" as SlideshowFragment
+participant "ShoppingListViewModel" as SlideshowViewModel
 participant "HttpClient" as HttpClient
 database "Spoonacular API" as Server
 participant "Convert" as Convert

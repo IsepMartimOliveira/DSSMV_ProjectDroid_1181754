@@ -2,8 +2,8 @@
 actor User as User
 title As a User I want to add a ingredient from a recipe
 
-participant "GalleryFragment" as GalleryFragment
-participant "GalleryViewModel" as GalleryViewModel
+participant "RecipesFragment" as GalleryFragment
+participant "RecipesViewModel" as GalleryViewModel
 participant "ShoppingCart" as ShoppingCart
 
 participant "HttpClient" as HttpClient

@@ -2,8 +2,8 @@
 actor User as User
 title As a User I want to see the different recipes
 
-participant "GalleryFragment" as GalleryFragment
-participant "GalleryViewModel" as GalleryViewModel
+participant "RecipesFragment" as GalleryFragment
+participant "RecipesViewModel" as GalleryViewModel
 participant "HttpClient" as HttpClient
 database "Spoonacular API" as Server
 participant "Convert" as Convert

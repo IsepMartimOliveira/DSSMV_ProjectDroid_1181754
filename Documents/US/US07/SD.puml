@@ -1,8 +1,8 @@
 @startuml
 title As User i want to delete a item
 actor User as User
-participant "SlideshowFragment" as SlideshowFragment
-participant "SlideshowViewModel" as SlideshowViewModel
+participant "ShoppingListFragment" as SlideshowFragment
+participant "ShoppingListViewModel" as SlideshowViewModel
 participant "HttpClient" as HttpClient
 database "Spoonacular API" as Server
 participant "Convert" as Convert
