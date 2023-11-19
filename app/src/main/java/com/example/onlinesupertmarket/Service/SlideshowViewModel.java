@@ -87,7 +87,6 @@ public class SlideshowViewModel extends ViewModel {
         HttpClient.deleteRequest(url, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                // Ignore failure if the item is not found
                 if (e.getMessage().contains("HTTP 404 Not Found")) {
                     deletedItemLiveData.postValue(itemId);
                 } else {
@@ -100,7 +99,6 @@ public class SlideshowViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     deletedItemLiveData.postValue(itemId);
                 } else {
-                    // Ignore failure if the item is not found
                     if (response.code() == 404) {
                         deletedItemLiveData.postValue(itemId);
                     } else {

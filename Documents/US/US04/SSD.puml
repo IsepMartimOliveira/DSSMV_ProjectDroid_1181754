@@ -4,7 +4,7 @@ actor "User" as MD
 title As a User i want to add a ingredient to the Shopping cart
 activate MD
 MD -> ":System" : User clicks on  add ingredients
-":System" --> ":System" : Gets ingredients
+":System" --> ":System" : Gets the ingredient
 ":System" --> ":System" : Validates data(can not be null)
 alt successful case - data is accepted
 activate ":System"

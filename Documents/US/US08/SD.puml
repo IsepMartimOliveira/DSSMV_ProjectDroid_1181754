@@ -9,6 +9,7 @@ participant "ShoppingAdapter" as ShoppingAdapter
 
 User -> SlideshowFragment: presses delete all button
 activate SlideshowFragment
+SlideshowFragment -> SlideshowViewModel: Live Data
 
 SlideshowFragment -> SlideshowViewModel: deleteAllItems(username, hash)
 activate SlideshowViewModel
@@ -17,16 +18,15 @@ SlideshowViewModel -> SlideshowViewModel: iterate through cartItems
 loop for each cartItem
     SlideshowViewModel -> SlideshowViewModel: get cartItem ID
     SlideshowViewModel -> SlideshowViewModel: call deleteItem(username, hash, itemId)
-end loop
-
+SlideshowViewModel-->SlideshowFragment: getDeletedItemLiveData().observe()
 deactivate SlideshowViewModel
 
 activate SlideshowFragment
-SlideshowFragment -> ShoppingAdapter: handleDeletedItem(deletedItemId) for each item
+SlideshowFragment -> ShoppingAdapter: handleDeletedItem(deletedItemId)
 activate ShoppingAdapter
+end loop
 ShoppingAdapter -> SlideshowFragment: remove all items
 deactivate ShoppingAdapter
-
 SlideshowFragment -> SlideshowFragment: updateTotalCostView(calculateTotalCost(cartItems))
 SlideshowFragment --> User: Update UI with Data and display it
 
